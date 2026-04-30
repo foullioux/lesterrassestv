@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Terrasses Suites</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --white:#FFFFFF; --offwhite:#F7F5F2; --mid:#AAAAAA;
+  --dark:#555555; --black:#2E2E2E; --olive:#7A7355;
+  --olive-bg:rgba(122,115,85,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Jost',sans-serif;font-weight:300;color:var(--black);background:var(--offwhite);}
+
+/* SCREENS - each fills viewport */
+.screen{display:none;position:fixed;inset:0;overflow-y:auto;background:var(--offwhite);z-index:10;}
+.screen.active{display:flex;flex-direction:column;}
+
+/* WELCOME */
+#screen-welcome{
+  background:linear-gradient(160deg,#FFFFFF,#F4F1EC,#EDE9E2);
+  align-items:center;justify-content:center;text-align:center;padding:48px;
+}
+
+/* MENU */
+#screen-menu{padding:40px 48px;background:#F2F2F2;}
+
+/* SUBSCREENS */
+.subscreen{padding:36px 48px;background:#F2F2F2;}
+
+/* COMMON */
+.logo-underline{width:180px;height:1px;background:linear-gradient(to right,transparent,var(--olive),transparent);margin:0 auto 10px;}
+.logo-sub{font-size:11px;letter-spacing:0.45em;text-transform:uppercase;color:var(--olive);margin-bottom:40px;}
+
+.lang-selector{display:flex;gap:10px;margin-bottom:40px;flex-wrap:wrap;justify-content:center;}
+.lang-btn{background:rgba(255,255,255,0.88);border:1px solid rgba(122,115,85,0.4);color:var(--black);padding:9px 22px;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;}
+.lang-btn:hover,.lang-btn.active{background:var(--olive);border-color:var(--olive);color:white;}
+
+.start-btn{background:var(--olive);border:none;color:white;padding:18px 56px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:0.45em;text-transform:uppercase;cursor:pointer;}
+.start-btn:hover{background:var(--black);}
+
+.welcome-greeting{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.2vw,24px);font-style:italic;color:var(--black);font-weight:600;margin-bottom:40px;}
+
+.location-tag{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--mid);}
+
+/* GUEST CARD */
+.guest-card{background:rgba(255,255,255,0.9);border:1px solid rgba(122,115,85,0.2);padding:20px 32px;margin-bottom:32px;min-width:340px;box-shadow:0 4px 20px rgba(0,0,0,0.06);}
+
+/* MENU CARDS */
+.menu-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;padding-bottom:16px;border-bottom:1px solid rgba(122,115,85,0.2);}
+.menu-logo{font-family:'Dancing Script',cursive;font-size:32px;color:var(--black);}
+.suite-badge{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--olive);border:1px solid rgba(122,115,85,0.3);padding:7px 16px;}
+.menu-title{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.5vw,26px);font-weight:300;color:var(--dark);font-style:italic;margin-bottom:28px;}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+.menu-card{background:white;border:1px solid rgba(122,115,85,0.15);padding:24px;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.04);}
+.menu-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--olive);transform:scaleX(0);transform-origin:left;transition:transform 0.3s;}
+.menu-card:hover{box-shadow:0 6px 24px rgba(122,115,85,0.15);transform:translateY(-2px);}
+.menu-card:hover::after{transform:scaleX(1);}
+.card-icon{font-size:26px;margin-bottom:14px;display:block;}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin-bottom:6px;color:var(--black);}
+.card-desc{font-size:11px;color:var(--mid);letter-spacing:0.08em;line-height:1.6;}
+
+/* SUBSCREEN ELEMENTS */
+.back-btn{background:transparent;border:none;color:var(--mid);cursor:pointer;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;margin-bottom:28px;display:flex;align-items:center;gap:10px;transition:color 0.3s;}
+.back-btn:hover{color:var(--olive);}
+.sub-header{display:flex;align-items:baseline;gap:16px;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid rgba(122,115,85,0.15);}
+.sub-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,48px);font-weight:600;color:var(--black);}
+.sub-script{font-family:'Dancing Script',cursive;font-size:22px;color:var(--olive);}
+
+.info-block{background:white;border:1px solid rgba(122,115,85,0.12);border-left:3px solid var(--olive);padding:18px 22px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.03);}
+.info-label{font-size:9px;letter-spacing:0.4em;text-transform:uppercase;color:var(--olive);margin-bottom:6px;}
+.info-value{font-size:18px;color:var(--black);letter-spacing:0.04em;}
+.info-note{font-size:11px;color:var(--mid);margin-top:4px;}
+
+.divider{display:flex;align-items:center;gap:16px;margin:24px 0;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(122,115,85,0.15);}
+.divider span{font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--olive);white-space:nowrap;}
+
+.request-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
+.req-btn{background:white;border:1px solid rgba(122,115,85,0.2);color:var(--black);padding:20px 16px;cursor:pointer;text-align:left;font-family:'Jost',sans-serif;transition:all 0.3s;box-shadow:0 2px 8px rgba(0,0,0,0.03);}
+.req-btn:hover{border-color:var(--olive);background:var(--olive-bg);}
+.req-icon{font-size:22px;display:block;margin-bottom:10px;}
+.req-title{font-size:12px;letter-spacing:0.1em;display:block;color:var(--dark);}
+
+.place-item{display:flex;align-items:flex-start;gap:20px;padding:16px 0;border-bottom:1px solid rgba(122,115,85,0.1);}
+.place-num{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:rgba(122,115,85,0.25);line-height:1;min-width:36px;}
+.place-name{font-size:14px;color:var(--black);margin-bottom:3px;font-weight:400;}
+.place-desc{font-size:11px;color:var(--dark);line-height:1.6;}
+.place-tag{display:inline-block;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--olive);border:1px solid rgba(122,115,85,0.3);padding:3px 8px;margin-top:5px;}
+
+.solar-stat{text-align:center;padding:24px;background:white;border:1px solid rgba(122,115,85,0.15);margin-bottom:12px;}
+.solar-number{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:var(--olive);line-height:1;}
+.solar-label{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--mid);margin-top:6px;}
+
+.coffee-step{display:flex;gap:18px;align-items:flex-start;padding:14px 0;border-bottom:1px solid rgba(122,115,85,0.08);}
+.step-num{width:28px;height:28px;border:1px solid var(--olive);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--olive);flex-shrink:0;}
+.step-text{font-size:13px;color:var(--dark);line-height:1.6;padding-top:4px;}
+
+.rating-row{display:flex;gap:10px;margin:18px 0;}
+.star-btn{width:52px;height:52px;background:white;border:1px solid rgba(122,115,85,0.2);color:var(--mid);font-size:20px;cursor:pointer;transition:all 0.2s;}
+.star-btn:hover,.star-btn.selected{background:var(--olive);border-color:var(--olive);color:white;}
+
+.checkout-success{display:none;text-align:center;padding:60px 40px;}
+.checkout-success h2{font-family:'Dancing Script',cursive;font-size:52px;color:var(--black);margin-bottom:12px;}
+.review-btn{display:inline-block;background:var(--olive);color:white;padding:14px 32px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;cursor:pointer;border:none;margin:6px;transition:background 0.3s;}
+.review-btn:hover{background:var(--black);}
+.review-btn.secondary{background:transparent;color:var(--dark);border:1px solid rgba(122,115,85,0.25);}
+
+.scroll-area{max-height:calc(100vh - 180px);overflow-y:auto;padding-right:4px;}
+.scroll-area::-webkit-scrollbar{width:2px;}
+.scroll-area::-webkit-scrollbar-thumb{background:var(--olive);}
+
+.time-display{position:fixed;top:20px;right:28px;font-size:12px;letter-spacing:0.2em;color:var(--mid);z-index:200;}
+.toast{position:fixed;bottom:28px;right:28px;background:var(--olive);color:white;padding:12px 20px;font-size:13px;opacity:0;transform:translateY(16px);transition:all 0.4s;pointer-events:none;z-index:9999;border-left:3px solid var(--black);}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* MODALS */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9000;align-items:center;justify-content:center;}
+.modal-box{background:white;max-width:480px;width:90%;padding:32px;position:relative;box-shadow:0 8px 40px rgba(0,0,0,0.15);}
+.modal-close{position:absolute;top:14px;right:14px;background:transparent;border:none;font-size:20px;color:var(--mid);cursor:pointer;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--black);margin-bottom:14px;}
+.modal-text{font-size:13px;color:var(--dark);line-height:1.9;margin-bottom:24px;}
+.modal-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.modal-btn{flex:1;border:none;padding:14px 18px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;min-width:130px;color:white;}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+</style>
+</head>
+<body>
+
+<div class="time-display" id="clock"></div>
+<div class="toast" id="toast"></div>
+
+<!-- ===== WELCOME ===== -->
+<div class="screen active" id="screen-welcome">
+  <img src="https://res.cloudinary.com/amenitiz/image/upload/w_400,dpr_auto,f_auto,q_auto:good/v1748856225/sgqhjsyrieg56sxn0eeb.png" alt="Les Terrasses" style="width:240px;max-width:75vw;margin-bottom:8px;">
+  <div class="logo-underline"></div>
+  <div class="logo-sub">Boutique Suites · Calheta · Madeira</div>
+
+  <!-- Guest Card -->
+  <div class="guest-card">
+    <div id="guest-label" style="font-size:9px;letter-spacing:0.4em;text-transform:uppercase;color:var(--olive);margin-bottom:6px;">Guest</div>
+    <div class="guest-name-display" style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--black);margin-bottom:14px;">Jorge Martínez</div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px;">
+      <div><div id="checkin-label" style="font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--olive);margin-bottom:3px;">Check-in</div><div style="font-size:15px;font-weight:600;color:var(--black);" id="checkin-date">16 Jul 2025</div></div>
+      <div style="width:1px;background:rgba(122,115,85,0.2);"></div>
+      <div><div id="checkout-label" style="font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--olive);margin-bottom:3px;">Check-out</div><div style="font-size:15px;font-weight:600;color:var(--black);" id="checkout-date">19 Jul 2025</div></div>
+      <div style="width:1px;background:rgba(122,115,85,0.2);"></div>
+      <div><div id="time-label" style="font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--olive);margin-bottom:3px;">Local time</div><div style="font-size:15px;font-weight:600;color:var(--black);" id="local-time-card">--:--</div></div>
+    </div>
+    <div style="border-top:1px solid rgba(122,115,85,0.15);padding-top:12px;display:flex;align-items:center;gap:16px;">
+      <div style="font-size:28px;" id="weather-icon">🌤️</div>
+      <div>
+        <div id="weather-label" style="font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--olive);margin-bottom:2px;">Weather in Calheta</div>
+        <div style="font-size:16px;font-weight:600;color:var(--black);" id="weather-temp">22°C · Madeira</div>
+        <div style="font-size:11px;color:var(--dark);" id="weather-desc"></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="welcome-greeting" id="greeting-text">Welcome to your suite</p>
+  <div class="lang-selector">
+    <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+    <button class="lang-btn" onclick="setLang('nl',this)">NL</button>
+    <button class="lang-btn" onclick="setLang('de',this)">DE</button>
+    <button class="lang-btn" onclick="setLang('fr',this)">FR</button>
+    <button class="lang-btn" onclick="setLang('es',this)">ES</button>
+    <button class="lang-btn" onclick="setLang('pt',this)">PT</button>
+  </div>
+  <button class="start-btn" id="start-btn" onclick="goToMenu()">Enter</button>
+  <div class="location-tag">Rua São João 134 · Calheta · Madeira · Portugal</div>
+</div>
+
+<!-- ===== MENU ===== -->
+<div class="screen" id="screen-menu">
+  <div class="menu-header">
+    <img src="https://res.cloudinary.com/amenitiz/image/upload/w_400,dpr_auto,f_auto,q_auto:good/v1748856225/sgqhjsyrieg56sxn0eeb.png" alt="Les Terrasses" style="height:48px;">
+    <div class="suite-badge">Boutique Suites</div>
+  </div>
+  <p class="menu-title" id="menu-title">How can we help you?</p>
+  <div class="menu-grid">
+    <div class="menu-card" onclick="showScreen('screen-checkin')">
+      <span class="card-icon">🗝️</span>
+      <div class="card-title" id="card-checkin-title">Check-in</div>
+      <div class="card-desc" id="card-checkin-desc">Welcome · WiFi · Access · House rules</div>
+    </div>
+    <div class="menu-card" onclick="showScreen('screen-room')">
+      <span class="card-icon">🏡</span>
+      <div class="card-title" id="card-room-title">My Room</div>
+      <div class="card-desc" id="card-room-desc">Coffee · Climate · Pool · Amenities</div>
+    </div>
+    <div class="menu-card" onclick="showScreen('screen-requests')">
+      <span class="card-icon">🛎️</span>
+      <div class="card-title" id="card-req-title">Requests</div>
+      <div class="card-desc" id="card-req-desc">Towels · Amenities · Issues</div>
+    </div>
+    <div class="menu-card" onclick="showScreen('screen-calheta')">
+      <span class="card-icon">📍</span>
+      <div class="card-title" id="card-cal-title">Discover Calheta</div>
+      <div class="card-desc" id="card-cal-desc">Supermarkets · Restaurants · Levadas</div>
+    </div>
+    <div class="menu-card" onclick="showScreen('screen-solar')">
+      <span class="card-icon">☀️</span>
+      <div class="card-title" id="card-sol-title">Sustainability</div>
+      <div class="card-desc" id="card-sol-desc">Solar energy · Environmental impact</div>
+    </div>
+    <div class="menu-card" onclick="showScreen('screen-checkout')">
+      <span class="card-icon">👋</span>
+      <div class="card-title" id="card-co-title">Check-out</div>
+      <div class="card-desc" id="card-co-desc">Rating · Departure instructions</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CHECK-IN ===== -->
+<div class="screen subscreen" id="screen-checkin">
+  <button class="back-btn" onclick="goToMenu()">← <span id="back-checkin">Main menu</span></button>
+  <div class="sub-header"><h2 class="sub-title" id="title-checkin">Check-in</h2><span class="sub-script" id="script-checkin">Welcome</span></div>
+  <div class="scroll-area">
+    <div class="info-block">
+      <div id="wifi-label" class="info-label">WiFi · Network</div>
+      <div class="info-value">LesTerrasses_Guest</div>
+      <div id="wifi-note" class="info-note">Password: Calheta2024 · Available throughout the property</div>
+      <div style="margin-top:14px;display:flex;align-items:center;gap:20px;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=WIFI:T:WPA;S:LesTerrasses_Guest;P:Calheta2024;;" style="width:130px;height:130px;border:4px solid white;box-shadow:0 2px 12px rgba(0,0,0,0.1);">
+        <div><div id="qr-connect" style="font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--olive);margin-bottom:6px;">Quick connect</div><div id="qr-scan" style="font-size:13px;color:var(--dark);line-height:1.7;">Point your phone camera<br>to connect instantly.</div></div>
+      </div>
+    </div>
+    <div class="info-block">
+      <div id="checkin-time-label" class="info-label">Check-in</div>
+      <div id="checkin-time-val" class="info-value">3:00 PM — 7:00 PM</div>
+      <div id="checkin-time-note" class="info-note">Outside these hours a supplement of €25 applies</div>
+    </div>
+    <div class="info-block">
+      <div id="checkout-time-label" class="info-label">Check-out</div>
+      <div id="checkout-time-val" class="info-value">by 11:00 AM</div>
+      <div id="checkout-time-note" class="info-note">Late check-out available on request · subject to availability</div>
+    </div>
+    <div class="divider"><span id="rules-label">Please note</span></div>
+    <div class="info-block" style="border-left-color:#AAA;">
+      <div style="font-size:14px;line-height:1.9;color:var(--dark);">
+        <span id="rules-text">🚭 &nbsp;Non-smoking property<br>🐾 &nbsp;No pets allowed<br>🔇 &nbsp;Quiet hours after 10:00 PM<br>🗑️ &nbsp;Leave rubbish at your room entrance and let us know</span>
+      </div>
+    </div>
+    <div class="info-block" style="background:linear-gradient(135deg,#faf9f7,#f0ede8);">
+      <div id="promise-label" class="info-label">✨ Our promise</div>
+      <div id="promise-quote" style="font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:var(--black);line-height:1.5;margin-bottom:12px;">Your wellbeing is our only priority</div>
+      <div id="promise-text" style="font-size:13px;line-height:1.9;color:var(--dark);">At Les Terrasses we have no front desk — we have something much better: <strong>personal, direct attention</strong>.<br><br>📲 &nbsp;<strong>WhatsApp / Phone</strong> · +351 924 965 570<br>✉️ &nbsp;<strong>Email</strong> · lesterrassessuites@gmail.com</div>
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button onclick="window.open('https://wa.me/351924965570','_blank')" style="background:var(--olive);color:white;border:none;padding:10px 20px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;">📲 WhatsApp</button>
+        <button onclick="window.open('mailto:lesterrassessuites@gmail.com','_blank')" style="background:transparent;color:var(--olive);border:1px solid var(--olive);padding:10px 20px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;">✉️ Email</button>
+      </div>
+    </div>
+    <div class="info-block" style="cursor:pointer;" onclick="window.open('mailto:lesterrassessuites@gmail.com','_blank')">
+      <div id="contact-label" class="info-label">Contact · Email</div>
+      <div class="info-value" style="font-size:16px;display:flex;align-items:center;gap:12px;"><span style="font-size:26px;">📲</span><span id="contact-val">lesterrassessuites@gmail.com</span></div>
+      <div id="contact-note" class="info-note">Gabriel · Owner · Available 24h · Tap to send email</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MY ROOM ===== -->
+<div class="screen subscreen" id="screen-room">
+  <button class="back-btn" onclick="goToMenu()">← <span id="back-room">Main menu</span></button>
+  <div class="sub-header"><h2 class="sub-title" id="title-room">My Room</h2><span class="sub-script" id="script-room">Your home in Madeira</span></div>
+  <div class="scroll-area">
+    <div class="divider"><span>Air conditioning · Heating</span></div>
+    <div class="info-block">
+      <div id="ac-label" class="info-label">Air conditioning · Heating</div>
+      <div id="ac-text" style="font-size:13px;line-height:1.8;color:var(--dark);">The remote control is on the bedside table.<br>Recommended temperature: 21–23°C.<br>Please switch off when leaving the room.</div>
+    </div>
+    <div class="divider"><span>The soul of Les Terrasses</span></div>
+    <div class="info-block" style="background:linear-gradient(135deg,#faf9f7,#f0ede8);">
+      <div id="stone-label" class="info-label">🪨 The living stone of Madeira</div>
+      <div id="stone-quote" style="font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:var(--black);margin-bottom:12px;">Every stone holds 10,000 years of volcanic history</div>
+      <div id="stone-text" style="font-size:13px;line-height:1.9;color:var(--dark);">The bathroom walls of your suite are clad in natural basaltic stone from the heart of Madeira. This is not decoration — it is the island itself living in your bathroom.<br><br>🌋 &nbsp;This stone <strong>breathes</strong>. Volcanic, alive, with its own mineral scent. That subtle earthy smell is not a flaw — it is <strong>nature's signature</strong>.<br><br>✅ &nbsp;The stone has been <strong>professionally treated</strong>, mould-free and sealed.<br><br>🏆 &nbsp;At Les Terrasses, you sleep <em>inside</em> Madeira.</div>
+    </div>
+    <div class="divider"><span>Pool</span></div>
+    <div class="info-block">
+      <div id="pool-label" class="info-label">Hours · Rules</div>
+      <div id="pool-text" style="font-size:14px;line-height:1.9;color:var(--dark);">🕘 &nbsp;Open from <strong>9:00 AM to 9:00 PM</strong><br>🚶 &nbsp;Access via stairs only<br>🏃 &nbsp;No running around the pool<br>🤸 &nbsp;No diving or jumping</div>
+    </div>
+    <div class="info-block" style="border-left-color:#888;cursor:pointer;" onclick="sendRequest('Pool towels')">
+      <div id="pool-towels-label" class="info-label">🏊 Pool towels</div>
+      <div id="pool-towels-val" style="font-size:14px;color:var(--dark);">Tap here to request pool towels</div>
+      <div id="pool-towels-note" class="info-note">A request will be sent by email · Response within 15 min</div>
+    </div>
+    <div class="divider"><span>Coffee · Nespresso</span></div>
+    <div class="coffee-step"><div class="step-num">1</div><div id="coffee-step1" class="step-text">Fill the water tank and switch on the machine using the main button.</div></div>
+    <div class="coffee-step"><div class="step-num">2</div><div id="coffee-step2" class="step-text">Insert a Nespresso capsule into the top compartment and close the lever.</div></div>
+    <div class="coffee-step"><div class="step-num">3</div><div id="coffee-step3" class="step-text">Place your cup under the spout and press the button to start extraction.</div></div>
+    <div class="coffee-step"><div class="step-num">4</div><div id="coffee-step4" class="step-text">You will find capsules in the cupboard. Nespresso-compatible — buy more at any local supermarket.</div></div>
+    <div class="info-block" style="margin-top:14px;border-left-color:#888;">
+      <div id="coffee-buy-label" class="info-label">💡 Where to buy compatible capsules</div>
+      <div id="coffee-buy-text" style="font-size:13px;line-height:1.8;color:var(--dark);">🛒 &nbsp;<strong>Pingo Doce</strong> · 8 min by car<br>🛒 &nbsp;<strong>Continente</strong> · R. dos Dragoeiros 59, Ribeira Brava · 20 min by car<br><small>Look for Nespresso compatible capsules</small></div>
+    </div>
+    <div class="divider"><span>TV · Entertainment</span></div>
+    <div class="info-block">
+      <div id="tv-label" class="info-label">Smart TV · Streaming</div>
+      <div id="tv-text" style="font-size:14px;line-height:1.8;color:var(--dark);">Access to Netflix, YouTube and browser included.<br>To return to this screen: press <strong style="color:var(--olive)">HOME</strong> on the remote.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REQUESTS ===== -->
+<div class="screen subscreen" id="screen-requests">
+  <button class="back-btn" onclick="goToMenu()">← <span id="back-req">Main menu</span></button>
+  <div class="sub-header"><h2 class="sub-title" id="title-req">Requests</h2><span class="sub-script" id="script-req">We are here</span></div>
+  <div class="request-grid">
+    <button class="req-btn" onclick="sendRequest('Extra towels')"><span class="req-icon">🛁</span><span id="req-towels" class="req-title">Extra towels</span></button>
+    <button class="req-btn" onclick="sendRequest('Extra pillows')"><span class="req-icon">🛏️</span><span id="req-pillows" class="req-title">Extra pillows</span></button>
+    <button class="req-btn" onclick="sendRequest('Toiletries / Amenities')"><span class="req-icon">🧴</span><span id="req-amenities" class="req-title">Toiletries</span></button>
+    <button class="req-btn" onclick="sendRequest('Extra coffee')"><span class="req-icon">☕</span><span id="req-coffee" class="req-title">Extra coffee</span></button>
+    <button class="req-btn" onclick="sendRequest('Extra blanket')"><span class="req-icon">🧣</span><span id="req-blanket" class="req-title">Extra blanket</span></button>
+    <button class="req-btn" onclick="sendRequest('Rubbish collection — leaving at room entrance')"><span class="req-icon">🗑️</span><span id="req-trash" class="req-title">Rubbish collection</span></button>
+    <button class="req-btn" onclick="showSheetInfo()"><span class="req-icon">🛏️</span><span id="req-sheets" class="req-title">Sheet change</span><span id="req-sheets-sub" style="display:block;font-size:10px;color:var(--mid);margin-top:4px;">Once a week · Accident: let us know</span></button>
+    <button class="req-btn" onclick="showCleaningInfo()"><span class="req-icon">🧹</span><span id="req-clean" class="req-title">Room cleaning</span><span id="req-clean-sub" style="display:block;font-size:10px;color:var(--mid);margin-top:4px;">Full cleaning: +€25</span></button>
+    <button class="req-btn" onclick="sendSpecialRequest('late')"><span class="req-icon">⏰</span><span id="req-late" class="req-title">Late check-out</span><span id="req-late-sub" style="display:block;font-size:10px;color:var(--mid);margin-top:4px;">Subject to availability</span></button>
+    <button class="req-btn" onclick="sendSpecialRequest('early')"><span class="req-icon">🌅</span><span id="req-early" class="req-title">Early check-in</span><span id="req-early-sub" style="display:block;font-size:10px;color:var(--mid);margin-top:4px;">Subject to availability</span></button>
+    <button class="req-btn" onclick="showIncidentModal()" style="border-color:rgba(180,60,60,0.3);"><span class="req-icon">⚠️</span><span id="req-incident" class="req-title">Incident / Problem</span><span id="req-incident-sub" style="display:block;font-size:10px;color:#c0392b;margin-top:4px;">WhatsApp · Direct call</span></button>
+  </div>
+  <p id="req-footer" style="margin-top:24px;font-size:11px;color:var(--mid);">Your request will reach the owner directly. Response time: under 15 minutes.</p>
+</div>
+
+<!-- ===== DISCOVER CALHETA ===== -->
+<div class="screen subscreen" id="screen-calheta">
+  <button class="back-btn" onclick="goToMenu()">← <span id="back-cal">Main menu</span></button>
+  <div class="sub-header"><h2 class="sub-title" id="title-cal">Discover Calheta</h2><span class="sub-script" id="script-cal">Our favourites</span></div>
+  <div class="scroll-area">
+
+    <div class="divider"><span id="div-services">Supermarkets</span></div>
+    <div class="place-item">
+      <div class="place-num">01</div>
+      <div style="flex:1"><div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="flex:1"><div class="place-name">Pingo Doce</div><div style="font-size:10px;color:#888;margin-top:2px;">Av. Dom Manuel I · 9370-133 Calheta</div><div id="supermarket-desc" class="place-desc">The nearest supermarket. Open every day until 9:00 PM.</div><span id="supermarket-tag" class="place-tag">8 min by car</span></div>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://maps.google.com/?q=32.719727,-17.174017" style="width:72px;height:72px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
+      </div></div>
+    </div>
+    <div class="place-item">
+  <div class="place-num">02</div>
+  <div style="flex:1"><div style="display:flex;align-items:flex-start;gap:12px;">
+    <div style="flex:1"><div class="place-name">Supermercado Merchan</div><div style="font-size:10px;color:#888;margin-top:2px;">Estrada Regional 223 · 9370-225 Calheta</div>
+    <div class="place-desc">Local supermarket with fresh products.</div>
+    <span class="place-tag">ER223 · 5 min</span></div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://maps.google.com/?q=Estrada+Regional+223+Calheta+Madeira+9370-225" style="width:72px;height:72px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
+  </div></div>
+</div>
+    <div class="place-item">
+  <div class="place-num">03</div>
+  <div style="flex:1"><div style="display:flex;align-items:flex-start;gap:12px;">
+    <div style="flex:1"><div class="place-name">Amanhecer · Supermercado</div><div style="font-size:10px;color:#888;margin-top:2px;">Calheta, Madeira</div>
+    <div class="place-desc">Neighbourhood supermarket with local products.</div>
+    <span class="place-tag">Calheta · 5 min</span></div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://maps.google.com/?q=Amanhecer+de+Estrela+Calheta+Madeira" style="width:72px;height:72px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
+  </div></div>
+</div>
+    <div class="place-item">
+  <div class="place-num">04</div>
+  <div style="flex:1"><div style="display:flex;align-items:flex-start;gap:12px;">
+    <div style="flex:1"><div class="place-name">Continente</div><div style="font-size:10px;color:#888;margin-top:2px;">R. dos Dragoeiros 59 · Ribeira Brava</div>
+    <div class="place-desc">Large supermarket. Ideal for bigger shops.</div>
+    <span class="place-tag">20 min by car · Ribeira Brava</span></div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://maps.google.com/?q=32.6706,-17.0667" style="width:72px;height:72px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
+  </div></div>
+</div>
+
+    <div class="divider"><span id="div-lunch">Lunch and Dinner</span></div>
+    <div class="place-item">
+  <div class="place-num">05</div>
+  <div style="flex:1"><div style="display:flex;align-items:flex-start;gap:12px;">
+    <div style="flex:1"><div class="place-name">Leme Marisqueria</div>
+    <div class="place-desc">The go-to seafood restaurant. Incredibly fresh and authentic.</div>
+    <span class="place-tag">Seafood · Recommended</span></div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://www.google.com/maps/search/Leme+Marisqueria+Calheta+Madeira" style="width:72px;height:72px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
+  </div></div>
+</div>
+    <div class="place-item">
+  <div class="place-num">06</div>
+  <div style="flex:1"><div style="display:flex;align-items:flex-start;gap:12px;">
+    <div style="flex:1"><div class="place-name">Manifatura do Gelato</div>
+    <div class="place-desc">Artisan gelato and sweet bites. Perfect for a break.</div>
+    <span class="place-tag">Gelato · Sweets</span></div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://www.google.com/maps/search/Manifatura+do+Gelato+Calheta+Madeira" style="width:72px;height:72px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
+  </div></div>
+</div>
+    <div class="place-item">
+  <div class="place-num">07</div>
+  <div style="flex:1"><div style="display:flex;align-items:flex-start;gap:12px;">
+    <div style="flex:1"><div class="place-name">Steak & Sun</div>
+    <div class="place-desc">Grilled meats in a relaxed setting. Great for a casual dinner.</div>
+    <span class="place-tag">Meat · Dinners</span></div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://www.google.com/maps/search/Steak+and+Sun+Calheta+Madeira" style="width:72px;height:72px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
+  </div></div>
+</div>
+    <div class="place-item">
+  <div class="place-num">08</div>
+  <div style="flex:1"><div style="display:flex;align-items:flex-start;gap:12px;">
+    <div style="flex:1"><div class="place-name">As Fontes de Horácio</div>
+    <div class="place-desc">Traditional Madeiran cuisine in a natural setting.</div>
+    <span class="place-tag">Local cuisine</span></div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://www.google.com/maps/search/As+Fontes+de+Horacio+Calheta+Madeira" style="width:72px;height:72px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
+  </div></div>
+</div>
+    <div class="place-item">
+  <div class="place-num">09</div>
+  <div style="flex:1"><div style="display:flex;align-items:flex-start;gap:12px;">
+    <div style="flex:1"><div class="place-name">Joe's Bar</div>
+    <div class="place-desc">Lively bar with tapas and cocktails. Great for evening drinks.</div>
+    <span class="place-tag">Bar · Drinks</span></div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://www.google.com/maps/search/Joes+Bar+Calheta+Madeira" style="width:72px;height:72px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
+  </div></div>
+</div>
+    <div class="place-item">
+  <div class="place-num">10</div>
+  <div style="flex:1"><div style="display:flex;align-items:flex-start;gap:12px;">
+    <div style="flex:1"><div class="place-name">Convento das Vinhas</div>
+    <div class="place-desc">Historic setting with local wines. Special romantic dinner.</div>
+    <span class="place-tag">Wines · Special dinner</span></div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://www.google.com/maps/search/Convento+das+Vinhas+Madeira" style="width:72px;height:72px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
+  </div></div>
+</div>
+
+    <div class="divider"><span id="div-breakfast">Breakfast</span></div>
+    <div class="place-item">
+  <div class="place-num">11</div>
+  <div style="flex:1"><div style="display:flex;align-items:flex-start;gap:12px;">
+    <div style="flex:1"><div class="place-name">Ben Tornato</div>
+    <div class="place-desc">Italian-style breakfasts and artisan pastries.</div>
+    <span class="place-tag">Breakfast · Pastries</span></div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://www.google.com/maps/search/Ben+Tornato+Calheta+Madeira" style="width:72px;height:72px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
+  </div></div>
+</div>
+    <div class="place-item">
+  <div class="place-num">12</div>
+  <div style="flex:1"><div style="display:flex;align-items:flex-start;gap:12px;">
+    <div style="flex:1"><div class="place-name">Golden Calheta</div>
+    <div class="place-desc">Breakfasts with sea views. Perfect morning spot.</div>
+    <span class="place-tag">Breakfast · Sea views</span></div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://www.google.com/maps/search/Golden+Calheta+Madeira" style="width:72px;height:72px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
+  </div></div>
+</div>
+
+    <div class="divider"><span id="div-nature">Levadas · Hiking</span></div>
+    <div class="place-item">
+  <div class="place-num">13</div>
+  <div style="flex:1"><div style="display:flex;align-items:flex-start;gap:12px;">
+    <div style="flex:1"><div class="place-name">Levada do Rabaçal · 25 Fontes</div>
+    <div class="place-desc">One of the most spectacular levadas. Waterfalls and laurel forest.</div>
+    <span class="place-tag">20 min by car · Must-see</span></div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://www.google.com/maps/search/Levada+Rabacal+25+Fontes+Madeira" style="width:72px;height:72px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
+  </div></div>
+</div>
+    <div class="place-item">
+  <div class="place-num">14</div>
+  <div style="flex:1"><div style="display:flex;align-items:flex-start;gap:12px;">
+    <div style="flex:1"><div class="place-name">Calheta Beach</div>
+    <div class="place-desc">Protected waters, ideal for snorkeling.</div>
+    <span class="place-tag">5 min by car</span></div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://www.google.com/maps/search/Praia+Calheta+Madeira" style="width:72px;height:72px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
+  </div></div>
+</div>
+    <div class="place-item">
+  <div class="place-num">15</div>
+  <div style="flex:1"><div style="display:flex;align-items:flex-start;gap:12px;">
+    <div style="flex:1"><div class="place-name">Miradouro do Pináculo</div>
+    <div class="place-desc">180° panoramic view of the Atlantic. Extraordinary sunset.</div>
+    <span class="place-tag">10 min by car</span></div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://www.google.com/maps/search/Miradouro+Pinaculo+Calheta+Madeira" style="width:72px;height:72px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
+  </div></div>
+</div>
+
+  </div>
+</div>
+
+<!-- ===== SUSTAINABILITY ===== -->
+<div class="screen subscreen" id="screen-solar">
+  <button class="back-btn" onclick="goToMenu()">← <span id="back-sol">Main menu</span></button>
+  <div class="sub-header"><h2 class="sub-title" id="title-sol">Sustainability</h2><span class="sub-script" id="script-sol">Powered by Madeira's sun</span></div>
+  <div class="scroll-area">
+    <div class="solar-stat"><div class="solar-number">23</div><div id="solar-panels" class="solar-label">Photovoltaic panels installed</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+      <div class="solar-stat"><div class="solar-number" style="font-size:38px;">7.5<span style="font-size:16px;">kW</span></div><div id="solar-inverter" class="solar-label">Inverter power</div></div>
+      <div class="solar-stat"><div class="solar-number" style="font-size:38px;">5.8<span style="font-size:16px;">kWh</span></div><div id="solar-battery" class="solar-label">Storage battery</div></div>
+    </div>
+    <div class="info-block">
+      <div id="solar-label" class="info-label">Our commitment</div>
+      <div id="solar-text" style="font-size:13px;line-height:1.8;color:var(--dark);">Les Terrasses generates its own electricity through solar energy. Your stay is powered mainly by the Madeiran sun, reducing our carbon footprint. The battery stores energy for nights and cloudy days.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CHECK-OUT ===== -->
+<div class="screen subscreen" id="screen-checkout">
+  <button class="back-btn" onclick="goToMenu()">← <span id="back-co">Main menu</span></button>
+  <div class="sub-header"><h2 class="sub-title" id="title-co">Check-out</h2><span class="sub-script" id="script-co">See you soon</span></div>
+  <div class="scroll-area">
+    <div id="checkout-form">
+      <div class="info-block">
+        <div id="checkout-instructions-label" class="info-label">Departure instructions</div>
+        <div id="checkout-text" style="font-size:14px;line-height:1.9;color:var(--dark);">🕐 &nbsp;Deadline: <strong>11:00 AM</strong><br>🔑 &nbsp;Leave the key inside the room<br>🚪 &nbsp;The main door closes automatically<br>🧳 &nbsp;You may leave luggage at reception if needed</div>
+      </div>
+      <div class="divider"><span>How was your stay?</span></div>
+      <p id="rating-text" style="font-size:13px;color:var(--mid);margin-bottom:16px;">Your feedback helps us improve continuously.</p>
+      <div class="rating-row">
+        <button class="star-btn" onclick="selectRating(1)">★</button>
+        <button class="star-btn" onclick="selectRating(2)">★</button>
+        <button class="star-btn" onclick="selectRating(3)">★</button>
+        <button class="star-btn" onclick="selectRating(4)">★</button>
+        <button class="star-btn" onclick="selectRating(5)">★</button>
+      </div>
+      <div style="margin-top:20px;">
+        <div id="comment-label" style="font-size:9px;letter-spacing:0.4em;text-transform:uppercase;color:var(--olive);margin-bottom:10px;">Anything you would like to share with us?</div>
+        <textarea id="guest-comment" placeholder="Your feedback is very valuable to us..." style="width:100%;min-height:90px;padding:12px 14px;font-family:'Jost',sans-serif;font-size:13px;color:var(--black);background:white;border:1px solid rgba(122,115,85,0.25);resize:vertical;outline:none;line-height:1.6;"></textarea>
+        <button onclick="submitComment()" style="margin-top:8px;background:var(--olive);color:white;border:none;padding:12px 28px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;cursor:pointer;"><span id="send-comment-btn">Send comment</span></button>
+      </div>
+    </div>
+    <div class="checkout-success" id="checkout-success">
+      <span style="font-size:52px;display:block;margin-bottom:18px;">🌿</span>
+      <h2 id="farewell-title">See you soon</h2>
+      <p id="farewell-text" style="color:var(--dark);font-size:14px;line-height:1.8;max-width:400px;margin:0 auto 24px;">It has been a pleasure having you at Les Terrasses Suites. We hope to welcome you back to Madeira soon.</p>
+      <button id="review-google" class="review-btn" onclick="openReview('google')">Review on Google</button>
+      <button id="review-booking" class="review-btn" onclick="openReview('booking')">Review on Booking</button><br>
+      <button id="back-menu-btn" class="review-btn secondary" onclick="goToMenu()">Back to menu</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div id="incident-modal" class="modal">
+  <div class="modal-box" style="border-top:3px solid #c0392b;">
+    <button class="modal-close" onclick="closeModal('incident-modal')">✕</button>
+    <div id="incident-modal-title" class="modal-title">⚠️ Incident / Problem</div>
+    <div id="incident-modal-text" class="modal-text">We are here to help immediately.<br><br>Please contact us <strong>preferably via WhatsApp or phone call</strong>.<br><br>📲 &nbsp;<strong>+351 924 965 570</strong></div>
+    <div class="modal-btns">
+      <button class="modal-btn" style="background:#25D366;" onclick="window.open('https://wa.me/351924965570','_blank');closeModal('incident-modal');">📲 WhatsApp</button>
+      <button class="modal-btn" style="background:#c0392b;" onclick="window.open('tel:+351924965570');closeModal('incident-modal');">📞 Call now</button>
+    </div>
+  </div>
+</div>
+
+<div id="special-request-modal" class="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('special-request-modal')">✕</button>
+    <div id="sr-modal-title" class="modal-title">Special request</div>
+    <div id="sr-modal-text" class="modal-text"></div>
+    <div class="modal-btns">
+      <button class="modal-btn" style="background:var(--olive);" onclick="window.open('https://wa.me/351924965570','_blank');closeModal('special-request-modal');">📲 WhatsApp · +351 924 965 570</button>
+      <button class="modal-btn" style="background:var(--black);" onclick="window.open('mailto:lesterrassessuites@gmail.com','_blank');closeModal('special-request-modal');">✉️ Email</button>
+    </div>
+  </div>
+</div>
+
+<div id="sheet-modal" class="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('sheet-modal')">✕</button>
+    <div class="modal-title">🛏️ Sheet change</div>
+    <div class="modal-text" id="sheet-modal-text">The sheets are changed <strong>once a week</strong> as part of our regular service.<br><br>If there has been an <strong>accident</strong>, please do not worry at all — we are here to help immediately with complete discretion. 🤍</div>
+    <div class="modal-btns">
+      <button class="modal-btn" style="background:var(--olive);" onclick="requestSheetChange('weekly')">📅 Weekly change</button>
+      <button class="modal-btn" style="background:var(--black);" onclick="requestSheetChange('accident')">🚿 Accident</button>
+    </div>
+  </div>
+</div>
+
+<div id="cleaning-modal" class="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('cleaning-modal')">✕</button>
+    <div class="modal-title">🧹 Room cleaning</div>
+    <div class="modal-text">🔒 &nbsp;Our team <strong>never enters your room without notifying you first</strong>. Your privacy is our priority.<br><br>🧹 &nbsp;Request a <strong>basic clean</strong> — tidying, mopping — anytime with confidence.<br><br>🧽 &nbsp;<strong>Full cleaning</strong> has a supplement of <strong>€25</strong>. We will notify you before proceeding.</div>
+    <div class="modal-btns">
+      <button class="modal-btn" style="background:var(--olive);" onclick="requestCleaning('basic')">🧹 Basic clean</button>
+      <button class="modal-btn" style="background:var(--black);" onclick="requestCleaning('full')">🧽 Full cleaning +€25</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const TRANSLATIONS = {
+  "es": {
+    "greeting": "Bienvenido a su suite",
+    "start": "Entrar",
+    "guest_label": "Huésped",
+    "checkin_label": "Check-in",
+    "checkout_label": "Check-out",
+    "time_label": "Hora local",
+    "weather_label": "Tiempo en Calheta",
+    "weather_loading": "Cargando...",
+    "menu_title": "¿En qué podemos ayudarle?",
+    "ci": "Check-in",
+    "cid": "Bienvenida · WiFi · Accesos · Normas",
+    "r": "Mi Habitación",
+    "rd": "Café · Climatización · TV · Comodidades",
+    "rq": "Solicitudes",
+    "rqd": "Toallas · Amenities · Incidencias",
+    "ca": "Descubrir Calheta",
+    "cad": "Restaurantes · Playas · Levadas · Consejos",
+    "so": "Sostenibilidad",
+    "sod": "Energía solar · Impacto medioambiental",
+    "co": "Check-out",
+    "cod": "Valoración · Instrucciones de salida",
+    "back": "Menú principal",
+    "script_checkin": "Bienvenidos",
+    "script_room": "Su hogar en Madeira",
+    "script_req": "Estamos aquí",
+    "script_cal": "Nuestros favoritos",
+    "script_sol": "Energía del sol de Madeira",
+    "script_co": "Hasta pronto",
+    "title_checkin": "Check-in",
+    "title_room": "Mi Habitación",
+    "title_req": "Solicitudes",
+    "title_cal": "Descubrir Calheta",
+    "title_sol": "Sostenibilidad",
+    "title_co": "Check-out",
+    "wifi_label": "WiFi · Red",
+    "wifi_note": "Contraseña: Calheta2024 · Disponible en toda la propiedad",
+    "qr_connect": "Conexión rápida",
+    "qr_scan": "Escanee con la cámara de su móvil para conectarse al instante.",
+    "checkin_time_label": "Check-in",
+    "checkin_time_val": "15:00h — 19:00h",
+    "checkin_time_note": "Fuera de este horario tiene un suplemento de 25€ · Consúltenos con antelación",
+    "checkout_time_label": "Check-out",
+    "checkout_time_val": "hasta las 11:00h",
+    "checkout_time_note": "Late check-out disponible bajo petición · sujeto a disponibilidad",
+    "rules_label": "Por favor tenga en cuenta",
+    "rule1": "Propiedad sin humo",
+    "rule2": "No se admiten mascotas",
+    "rule3": "Silencio a partir de las 22:00h",
+    "rule4": "Para retirar la basura, déjela en la entrada de su habitación y avísenos",
+    "promise_label": "✨ Nuestra promesa",
+    "promise_quote": "Su bienestar es nuestra única prioridad",
+    "promise_text": "En Les Terrasses no tenemos recepción — tenemos algo mucho mejor: <strong>atención personal y directa</strong>. Cada huésped importa, cada detalle importa.<br><br>Si necesita algo — grande o pequeño, urgente o no — no lo dude ni un segundo. Estamos aquí para hacer de su estancia en Madeira una experiencia que recuerde siempre.<br><br>✉️ &nbsp;<strong>Email</strong> · lesterrassessuites@gmail.com<br>📞 &nbsp;<strong>Teléfono</strong> · +351 924 965 570<br>✉️ &nbsp;<strong>Email</strong> · lesterrassessuites@gmail.com",
+    "contact_label": "Contacto · Email",
+    "contact_val": "lesterrassessuites@gmail.com",
+    "contact_note": "Gabriel · Propietario · Disponible 24h · Toque para enviar email",
+    "ac_label": "Aire acondicionado · Calefacción",
+    "ac_text": "El mando a distancia está en la mesita de noche.<br>Temperatura recomendada: 21–23°C.<br>Por favor apague al salir de la habitación.",
+    "stone_label": "🪨 La piedra viva de Madeira",
+    "stone_quote": "Cada piedra cuenta 10.000 años de historia volcánica",
+    "stone_text": "Las paredes del baño de su suite están revestidas con piedra basáltica natural extraída de las entrañas de Madeira. No es decoración — es la isla misma habitando su cuarto de baño.<br><br>🌋 &nbsp;Esta piedra <strong>respira</strong>. Es volcánica, viva, y como todo ser vivo, tiene su propio aroma: mineral, fresco, profundo. Ese tenue olor a tierra húmeda que quizás perciba no es un defecto — es la <strong>firma de la naturaleza</strong>.<br><br>✅ &nbsp;La piedra está <strong>tratada profesionalmente</strong>, libre de hongos y perfectamente sellada.<br><br>🏆 &nbsp;Muy pocos alojamientos del mundo pueden ofrecer esta autenticidad. En Les Terrasses, no dormirá <em>en</em> Madeira — dormirá <em>dentro</em> de Madeira.",
+    "pool_label": "Horario · Normas",
+    "pool_text": "🕘 &nbsp;Abierta de <strong>09:00h a 21:00h</strong><br>🚶 &nbsp;Acceso únicamente por las escaleras<br>🏃 &nbsp;Prohibido correr en el área de piscina<br>🤸 &nbsp;Prohibido tirarse al agua",
+    "pool_towels_label": "🏊 Toallas de piscina",
+    "pool_towels_val": "Toque aquí para solicitar toallas de piscina",
+    "pool_towels_note": "Se enviará una solicitud por WhatsApp · Respuesta en menos de 15 min",
+    "coffee_step1": "Llene el depósito de agua y encienda la máquina pulsando el botón principal.",
+    "coffee_step2": "Inserte una cápsula Nespresso en el compartimento superior y cierre la palanca.",
+    "coffee_step3": "Coloque su taza debajo del dispensador y pulse el botón para iniciar la extracción.",
+    "coffee_step4": "Encontrará cápsulas en el armario. Son compatibles con Nespresso — puede comprar más en cualquier supermercado local.",
+    "coffee_buy_label": "💡 Dónde comprar cápsulas compatibles",
+    "coffee_buy_text": "🛒 &nbsp;<strong>Pingo Doce</strong> · 8 min en coche<br>🛒 &nbsp;<strong>Continente</strong> · R. dos Dragoeiros 59, Ribeira Brava · 20 min en coche<br><small>Busque cápsulas compatibles Nespresso</small>",
+    "tv_label": "Smart TV · Streaming",
+    "tv_text": "Acceso a Netflix, YouTube y navegador incluido.<br>Para volver a esta pantalla: pulse <strong style=\"color:#7A7355\">HOME</strong> en el mando.",
+    "req_towels": "Toallas extra",
+    "req_pillows": "Almohadas extra",
+    "req_amenities": "Amenities",
+    "req_sheets": "Cambio de sábanas",
+    "req_trash": "Retirar basura",
+    "req_clean": "Limpieza de habitación",
+    "req_blanket": "Manta adicional",
+    "req_coffee": "Café extra",
+    "req_late": "Late check-out",
+    "req_late_sub": "Sujeto a disponibilidad",
+    "req_early": "Early check-in",
+    "req_early_sub": "Sujeto a disponibilidad",
+    "req_incident": "Incidencia / Problema",
+    "req_footer": "Su solicitud se enviará por email. Tiempo de respuesta: menos de 15 minutos.",
+    "div_lunch": "Para comer y cenar",
+    "div_breakfast": "Para desayunar",
+    "div_nature": "Levadas · Senderismo",
+    "div_services": "Supermercados",
+    "r1d": "Marisquería de referencia en la zona. Fresquísimo y muy auténtico.",
+    "r2d": "Helados artesanales y bocados dulces. Perfecto para una pausa a cualquier hora.",
+    "r3d": "Carnes a la brasa con ambiente relajado. Ideal para una cena informal.",
+    "r4d": "Cocina madeireña tradicional en un entorno natural. Auténtico y familiar.",
+    "r5d": "Bar con ambiente animado, tapas y cócteles. Buen lugar para tomar algo por la noche.",
+    "r6d": "Restaurante en un entorno histórico con vinos locales. Experiencia especial para una cena romántica.",
+    "r7d": "Desayunos italianos y pastelería artesanal. Ambiente acogedor para empezar el día.",
+    "r8d": "Desayunos con vistas al mar. El lugar perfecto para comenzar la mañana en Madeira.",
+    "supermarket": "El supermercado más cercano. Abierto todos los días hasta las 21h.",
+    "supermarket_tag": "8 min en coche",
+    "solar_panels": "Paneles fotovoltaicos instalados",
+    "solar_inverter": "Potencia del inversor",
+    "solar_battery": "Batería de almacenamiento",
+    "solar_label": "Nuestro compromiso",
+    "solar_text": "Les Terrasses genera su propia electricidad a través de energía solar. Su estancia está alimentada principalmente por el sol de Madeira, reduciendo nuestra huella de carbono. La batería almacena energía para la noche y los días nublados.",
+    "checkout_instructions_label": "Instrucciones de salida",
+    "checkout_text": "🕐 &nbsp;Hora límite: <strong>11:00h</strong><br>🔑 &nbsp;Deje la llave en el interior de la habitación<br>🚪 &nbsp;La puerta principal se cierra automáticamente<br>🧳 &nbsp;Puede dejar el equipaje en recepción si necesita más tiempo",
+    "rating_text": "Su opinión nos ayuda a mejorar continuamente.",
+    "farewell_title": "Hasta pronto",
+    "farewell_text": "Ha sido un placer tenerle en Les Terrasses Suites. Esperamos volver a verle pronto en Madeira.",
+    "review_google": "Reseña en Google",
+    "review_booking": "Reseña en Booking",
+    "back_menu": "Volver al menú",
+    "w0": "Despejado",
+    "w1": "Mayormente despejado",
+    "w2": "Parcialmente nublado",
+    "w3": "Nublado",
+    "w45": "Niebla",
+    "w51": "Llovizna",
+    "w61": "Lluvia ligera",
+    "w63": "Lluvia moderada",
+    "w80": "Chubascos",
+    "w95": "Tormenta",
+    "merchan_desc": "Supermercado local con productos frescos y de proximidad.",
+    "amanhecer_desc": "Supermercado de barrio con productos locales y horario amplio.",
+    "comment_label": "¿Algo que quiera compartir con nosotros?",
+    "comment_placeholder": "Su comentario es muy valioso para nosotros...",
+    "send_comment_btn": "Enviar comentario",
+    "req_sheets_sub": "1 vez por semana · Accidente: avísenos",
+    "req_clean_sub": "Limpieza integral: +25€",
+    "late_modal_title": "⏰ Late Check-out",
+    "late_modal_text": "El late check-out está sujeto a disponibilidad.<br><br>Para solicitarlo contáctenos directamente:<br><br>📲 &nbsp;<strong>WhatsApp / Teléfono</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>Email</strong><br>lesterrassessuites@gmail.com",
+    "early_modal_title": "🌅 Early Check-in",
+    "early_modal_text": "El early check-in está sujeto a disponibilidad.<br><br>Para solicitarlo contáctenos directamente:<br><br>📲 &nbsp;<strong>WhatsApp / Teléfono</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>Email</strong><br>lesterrassessuites@gmail.com",
+    "incident_modal_title": "⚠️ Incidencia / Problema",
+    "incident_modal_text": "Estamos aquí para ayudarle de inmediato.<br><br>Por favor contáctenos <strong style=\"color:var(--black)\">preferiblemente por WhatsApp o llamada telefónica</strong> para que podamos atenderle con la mayor rapidez posible.<br><br>📲 &nbsp;<strong>+351 924 965 570</strong><br><br>Responderemos en el menor tiempo posible.",
+    "req_incident_sub": "WhatsApp · Llamada directa"
+  },
+  "pt": {
+    "greeting": "Bem-vindo à sua suite",
+    "start": "Entrar",
+    "guest_label": "Hóspede",
+    "checkin_label": "Check-in",
+    "checkout_label": "Check-out",
+    "time_label": "Hora local",
+    "weather_label": "Tempo em Calheta",
+    "weather_loading": "A carregar...",
+    "menu_title": "Como podemos ajudá-lo?",
+    "ci": "Check-in",
+    "cid": "Boas-vindas · WiFi · Acessos · Regras",
+    "r": "O Meu Quarto",
+    "rd": "Café · Climatização · TV · Comodidades",
+    "rq": "Pedidos",
+    "rqd": "Toalhas · Amenities · Ocorrências",
+    "ca": "Descobrir Calheta",
+    "cad": "Restaurantes · Praias · Levadas · Dicas",
+    "so": "Sustentabilidade",
+    "sod": "Energia solar · Impacto ambiental",
+    "co": "Check-out",
+    "cod": "Avaliação · Instruções de saída",
+    "back": "Menu principal",
+    "script_checkin": "Bem-vindos",
+    "script_room": "A sua casa na Madeira",
+    "script_req": "Estamos aqui",
+    "script_cal": "Os nossos favoritos",
+    "script_sol": "Energia do sol da Madeira",
+    "script_co": "Até breve",
+    "title_checkin": "Check-in",
+    "title_room": "O Meu Quarto",
+    "title_req": "Pedidos",
+    "title_cal": "Descobrir Calheta",
+    "title_sol": "Sustentabilidade",
+    "title_co": "Check-out",
+    "wifi_label": "WiFi · Rede",
+    "wifi_note": "Senha: Calheta2024 · Disponível em toda a propriedade",
+    "qr_connect": "Ligação rápida",
+    "qr_scan": "Aponte a câmara do seu telemóvel para ligar instantaneamente.",
+    "checkin_time_label": "Check-in",
+    "checkin_time_val": "15:00h — 19:00h",
+    "checkin_time_note": "Fora deste horário tem um suplemento de 25€ · Consulte-nos com antecedência",
+    "checkout_time_label": "Check-out",
+    "checkout_time_val": "até às 11:00h",
+    "checkout_time_note": "Late check-out disponível mediante pedido · sujeito a disponibilidade",
+    "rules_label": "Por favor tenha em conta",
+    "rule1": "Propriedade sem fumo",
+    "rule2": "Não são permitidos animais",
+    "rule3": "Silêncio a partir das 22:00h",
+    "rule4": "Para recolher o lixo, deixe-o à entrada do quarto e avise-nos",
+    "promise_label": "✨ A nossa promessa",
+    "promise_quote": "O seu bem-estar é a nossa única prioridade",
+    "promise_text": "Na Les Terrasses não temos receção — temos algo muito melhor: <strong>atenção pessoal e direta</strong>. Cada hóspede importa, cada detalhe importa.<br><br>Se precisar de algo — grande ou pequeno, urgente ou não — não hesite. Estamos aqui para tornar a sua estadia na Madeira numa experiência inesquecível.<br><br>✉️ &nbsp;<strong>Email</strong> · lesterrassessuites@gmail.com<br>📞 &nbsp;<strong>Telefone</strong> · +351 924 965 570<br>✉️ &nbsp;<strong>Email</strong> · lesterrassessuites@gmail.com",
+    "contact_label": "Contacto · Email",
+    "contact_val": "lesterrassessuites@gmail.com",
+    "contact_note": "Gabriel · Proprietário · Disponível 24h · Toque para enviar email",
+    "ac_label": "Ar condicionado · Aquecimento",
+    "ac_text": "O telecomando está na mesa de cabeceira.<br>Temperatura recomendada: 21–23°C.<br>Por favor desligue ao sair do quarto.",
+    "stone_label": "🪨 A pedra viva da Madeira",
+    "stone_quote": "Cada pedra conta 10.000 anos de história vulcânica",
+    "stone_text": "As paredes da casa de banho da sua suite são revestidas com pedra basáltica natural extraída das entranhas da Madeira. Não é decoração — é a ilha a habitar a sua casa de banho.<br><br>🌋 &nbsp;Esta pedra <strong>respira</strong>. É vulcânica, viva, e como todo ser vivo, tem o seu próprio aroma: mineral, fresco, profundo. Esse leve cheiro a terra húmida não é um defeito — é a <strong>assinatura da natureza</strong>.<br><br>✅ &nbsp;A pedra está <strong>tratada profissionalmente</strong>, sem fungos e perfeitamente selada.<br><br>🏆 &nbsp;Muito poucos alojamentos no mundo podem oferecer esta autenticidade. Na Les Terrasses, não dormirá <em>na</em> Madeira — dormirá <em>dentro</em> da Madeira.",
+    "pool_label": "Horário · Regras",
+    "pool_text": "🕘 &nbsp;Aberta das <strong>09:00h às 21:00h</strong><br>🚶 &nbsp;Acesso apenas pelas escadas<br>🏃 &nbsp;Proibido correr na área da piscina<br>🤸 &nbsp;Proibido mergulhar",
+    "pool_towels_label": "🏊 Toalhas de piscina",
+    "pool_towels_val": "Toque aqui para pedir toalhas de piscina",
+    "pool_towels_note": "Será enviado um pedido por WhatsApp · Resposta em menos de 15 min",
+    "coffee_step1": "Encha o reservatório de água e ligue a máquina premindo o botão principal.",
+    "coffee_step2": "Insira uma cápsula Nespresso no compartimento superior e feche a alavanca.",
+    "coffee_step3": "Coloque a sua chávena sob o distribuidor e prima o botão para iniciar a extração.",
+    "coffee_step4": "Encontrará cápsulas no armário. São compatíveis com Nespresso — pode comprar mais em qualquer supermercado.",
+    "coffee_buy_label": "💡 Onde comprar cápsulas compatíveis",
+    "coffee_buy_text": "🛒 &nbsp;<strong>Pingo Doce</strong> · 8 min de carro<br>🛒 &nbsp;<strong>Continente</strong> · R. dos Dragoeiros 59, Ribeira Brava · 20 min de carro<br><small>Procure cápsulas compatíveis Nespresso</small>",
+    "tv_label": "Smart TV · Streaming",
+    "tv_text": "Acesso a Netflix, YouTube e browser incluído.<br>Para voltar a este ecrã: prima <strong style=\"color:#7A7355\">HOME</strong> no comando.",
+    "req_towels": "Toalhas extra",
+    "req_pillows": "Almofadas extra",
+    "req_amenities": "Amenities",
+    "req_sheets": "Mudança de lençóis",
+    "req_trash": "Recolha de lixo",
+    "req_clean": "Limpeza do quarto",
+    "req_blanket": "Cobertor extra",
+    "req_coffee": "Café extra",
+    "req_late": "Late check-out",
+    "req_late_sub": "Sujeito a disponibilidade",
+    "req_early": "Early check-in",
+    "req_early_sub": "Sujeito a disponibilidade",
+    "req_incident": "Incidência / Problema",
+    "req_footer": "O seu pedido será enviado por email. Tempo de resposta: menos de 15 minutos.",
+    "div_lunch": "Para almoço e jantar",
+    "div_breakfast": "Para o pequeno-almoço",
+    "div_nature": "Levadas · Caminhadas",
+    "div_services": "Supermercados",
+    "r1d": "Marisqueira de referência na zona. Fresquíssimo e muito autêntico.",
+    "r2d": "Gelados artesanais e petiscos doces. Perfeito para uma pausa a qualquer hora.",
+    "r3d": "Carnes grelhadas num ambiente descontraído. Ideal para um jantar informal.",
+    "r4d": "Cozinha madeirense tradicional em ambiente natural. Autêntico e familiar.",
+    "r5d": "Bar animado, tapas e cocktails. Bom lugar para uma bebida à noite.",
+    "r6d": "Restaurante num ambiente histórico com vinhos locais. Experiência especial para um jantar romântico.",
+    "r7d": "Pequenos-almoços italianos e pastelaria artesanal. Ambiente acolhedor para começar o dia.",
+    "r8d": "Pequenos-almoços com vista para o mar. O lugar perfeito para começar a manhã na Madeira.",
+    "supermarket": "O supermercado mais próximo. Aberto todos os dias até às 21h.",
+    "supermarket_tag": "8 min de carro",
+    "solar_panels": "Painéis fotovoltaicos instalados",
+    "solar_inverter": "Potência do inversor",
+    "solar_battery": "Bateria de armazenamento",
+    "solar_label": "O nosso compromisso",
+    "solar_text": "A Les Terrasses gera a sua própria eletricidade através de energia solar. A sua estadia é alimentada principalmente pelo sol da Madeira, reduzindo a nossa pegada de carbono.",
+    "checkout_instructions_label": "Instruções de saída",
+    "checkout_text": "🕐 &nbsp;Hora limite: <strong>11:00h</strong><br>🔑 &nbsp;Deixe a chave no interior do quarto<br>🚪 &nbsp;A porta principal fecha automaticamente<br>🧳 &nbsp;Pode deixar a bagagem na receção se precisar de mais tempo",
+    "rating_text": "A sua opinião ajuda-nos a melhorar continuamente.",
+    "farewell_title": "Até breve",
+    "farewell_text": "Foi um prazer tê-lo na Les Terrasses Suites. Esperamos vê-lo novamente em breve na Madeira.",
+    "review_google": "Avaliação no Google",
+    "review_booking": "Avaliação no Booking",
+    "back_menu": "Voltar ao menu",
+    "w0": "Céu limpo",
+    "w1": "Maioritariamente limpo",
+    "w2": "Parcialmente nublado",
+    "w3": "Nublado",
+    "w45": "Nevoeiro",
+    "w51": "Chuvisco",
+    "w61": "Chuva fraca",
+    "w63": "Chuva moderada",
+    "w80": "Aguaceiros",
+    "w95": "Trovoada",
+    "merchan_desc": "Supermercado local com produtos frescos e de proximidade.",
+    "amanhecer_desc": "Supermercado de bairro com produtos locais e horário alargado.",
+    "comment_label": "Quer partilhar algo connosco?",
+    "comment_placeholder": "O seu comentário é muito valioso para nós...",
+    "send_comment_btn": "Enviar comentário",
+    "req_sheets_sub": "1 vez por semana · Acidente: avise-nos",
+    "req_clean_sub": "Limpeza integral: +25€",
+    "late_modal_title": "⏰ Late Check-out",
+    "late_modal_text": "O late check-out está sujeito a disponibilidade.<br><br>Para o solicitar contacte-nos diretamente:<br><br>📲 &nbsp;<strong>WhatsApp / Telefone</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>Email</strong><br>lesterrassessuites@gmail.com",
+    "early_modal_title": "🌅 Early Check-in",
+    "early_modal_text": "O early check-in está sujeito a disponibilidade.<br><br>Para o solicitar contacte-nos diretamente:<br><br>📲 &nbsp;<strong>WhatsApp / Telefone</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>Email</strong><br>lesterrassessuites@gmail.com",
+    "incident_modal_title": "⚠️ Incidência / Problema",
+    "incident_modal_text": "Estamos aqui para o ajudar de imediato.<br><br>Por favor contacte-nos <strong style=\"color:var(--black)\">preferencialmente por WhatsApp ou chamada telefónica</strong> para que possamos atendê-lo o mais rapidamente possível.<br><br>📲 &nbsp;<strong>+351 924 965 570</strong><br><br>Responderemos no menor tempo possível.",
+    "req_incident_sub": "WhatsApp · Chamada direta"
+  },
+  "en": {
+    "greeting": "Welcome to your suite",
+    "start": "Enter",
+    "guest_label": "Guest",
+    "checkin_label": "Check-in",
+    "checkout_label": "Check-out",
+    "time_label": "Local time",
+    "weather_label": "Weather in Calheta",
+    "weather_loading": "Loading...",
+    "menu_title": "How can we help you?",
+    "ci": "Check-in",
+    "cid": "Welcome · WiFi · Access · House rules",
+    "r": "My Room",
+    "rd": "Coffee · Climate · TV · Amenities",
+    "rq": "Requests",
+    "rqd": "Towels · Amenities · Issues",
+    "ca": "Discover Calheta",
+    "cad": "Restaurants · Beaches · Levadas · Tips",
+    "so": "Sustainability",
+    "sod": "Solar energy · Environmental impact",
+    "co": "Check-out",
+    "cod": "Rating · Departure instructions",
+    "back": "Main menu",
+    "script_checkin": "Welcome",
+    "script_room": "Your home in Madeira",
+    "script_req": "We are here",
+    "script_cal": "Our favourites",
+    "script_sol": "Powered by Madeira sun",
+    "script_co": "See you soon",
+    "title_checkin": "Check-in",
+    "title_room": "My Room",
+    "title_req": "Requests",
+    "title_cal": "Discover Calheta",
+    "title_sol": "Sustainability",
+    "title_co": "Check-out",
+    "wifi_label": "WiFi · Network",
+    "wifi_note": "Password: Calheta2024 · Available throughout the property",
+    "qr_connect": "Quick connect",
+    "qr_scan": "Point your phone camera to connect instantly.",
+    "checkin_time_label": "Check-in",
+    "checkin_time_val": "3:00 PM — 7:00 PM",
+    "checkin_time_note": "Outside these hours a supplement of 25 euros applies · Please enquire in advance",
+    "checkout_time_label": "Check-out",
+    "checkout_time_val": "by 11:00 AM",
+    "checkout_time_note": "Late check-out available on request · subject to availability",
+    "rules_label": "Please note",
+    "rule1": "Non-smoking property",
+    "rule2": "No pets allowed",
+    "rule3": "Quiet hours after 10:00 PM",
+    "rule4": "To dispose of rubbish, leave it at your room entrance and let us know",
+    "promise_label": "✨ Our promise",
+    "promise_quote": "Your wellbeing is our only priority",
+    "promise_text": "At Les Terrasses we have no front desk — we have something much better: <strong>personal, direct attention</strong>. Every guest matters, every detail matters.<br><br>If you need anything — big or small, urgent or not — please do not hesitate. We are here to make your stay in Madeira an experience you will always remember.<br><br>✉️ &nbsp;<strong>Email</strong> · lesterrassessuites@gmail.com<br>📞 &nbsp;<strong>Phone</strong> · +351 924 965 570<br>✉️ &nbsp;<strong>Email</strong> · lesterrassessuites@gmail.com",
+    "contact_label": "Contact · Email",
+    "contact_val": "lesterrassessuites@gmail.com",
+    "contact_note": "Gabriel · Owner · Available 24h · Tap to send email",
+    "ac_label": "Air conditioning · Heating",
+    "ac_text": "The remote control is on the bedside table.<br>Recommended temperature: 21-23 degrees C.<br>Please switch off when leaving the room.",
+    "stone_label": "🪨 The living stone of Madeira",
+    "stone_quote": "Every stone holds 10,000 years of volcanic history",
+    "stone_text": "The bathroom walls of your suite are clad in natural basaltic stone from the heart of Madeira. This is not decoration — it is the island itself living in your bathroom.<br><br>🌋 &nbsp;This stone <strong>breathes</strong>. It is volcanic, alive, and like all living things it has its own scent: mineral, fresh, deep. That subtle earthy smell you may notice is not a flaw — it is <strong>nature signature</strong>.<br><br>✅ &nbsp;The stone has been <strong>professionally treated</strong>, is mould-free and perfectly sealed.<br><br>🏆 &nbsp;Very few places in the world can offer this authenticity. At Les Terrasses, you will not sleep <em>in</em> Madeira — you will sleep <em>inside</em> Madeira.",
+    "pool_label": "Hours · Rules",
+    "pool_text": "🕘 &nbsp;Open from <strong>9:00 AM to 9:00 PM</strong><br>🚶 &nbsp;Access via stairs only<br>🏃 &nbsp;No running around the pool<br>🤸 &nbsp;No diving or jumping",
+    "pool_towels_label": "🏊 Pool towels",
+    "pool_towels_val": "Tap here to request pool towels",
+    "pool_towels_note": "A request will be sent via WhatsApp · Response within 15 min",
+    "coffee_step1": "Fill the water tank and switch on the machine using the main button.",
+    "coffee_step2": "Insert a Nespresso capsule into the top compartment and close the lever.",
+    "coffee_step3": "Place your cup under the spout and press the button to start extraction.",
+    "coffee_step4": "You will find capsules in the cupboard. They are Nespresso-compatible — buy more at any local supermarket.",
+    "coffee_buy_label": "💡 Where to buy compatible capsules",
+    "coffee_buy_text": "🛒 &nbsp;<strong>Pingo Doce</strong> · 8 min by car<br>🛒 &nbsp;<strong>Continente</strong> · R. dos Dragoeiros 59, Ribeira Brava · 20 min by car<br><small>Look for Nespresso compatible capsules</small>",
+    "tv_label": "Smart TV · Streaming",
+    "tv_text": "Access to Netflix, YouTube and browser included.<br>To return to this screen: press <strong style=\"color:#7A7355\">HOME</strong> on the remote.",
+    "req_towels": "Extra towels",
+    "req_pillows": "Extra pillows",
+    "req_amenities": "Toiletries",
+    "req_sheets": "Sheet change",
+    "req_trash": "Rubbish collection",
+    "req_clean": "Room cleaning",
+    "req_blanket": "Extra blanket",
+    "req_coffee": "Extra coffee",
+    "req_late": "Late check-out",
+    "req_late_sub": "Subject to availability",
+    "req_early": "Early check-in",
+    "req_early_sub": "Subject to availability",
+    "req_incident": "Incident / Problem",
+    "req_footer": "Your request will be sent by email. Response time: under 15 minutes.",
+    "div_lunch": "Lunch and Dinner",
+    "div_breakfast": "Breakfast",
+    "div_nature": "Levadas · Hiking",
+    "div_services": "Supermarkets",
+    "r1d": "The go-to seafood restaurant in the area. Incredibly fresh and authentic.",
+    "r2d": "Artisan gelato and sweet bites. Perfect for a break at any time of day.",
+    "r3d": "Grilled meats in a relaxed setting. Great for a casual dinner.",
+    "r4d": "Traditional Madeiran cuisine in a natural setting. Authentic and family-run.",
+    "r5d": "Lively bar with tapas and cocktails. A great spot for evening drinks.",
+    "r6d": "Restaurant in a historic setting with local wines. A special experience for a romantic dinner.",
+    "r7d": "Italian-style breakfasts and artisan pastries. A cosy place to start the day.",
+    "r8d": "Breakfasts with sea views. The perfect spot to start your morning in Madeira.",
+    "supermarket": "The nearest supermarket. Open every day until 9:00 PM.",
+    "supermarket_tag": "8 min by car",
+    "solar_panels": "Photovoltaic panels installed",
+    "solar_inverter": "Inverter power",
+    "solar_battery": "Storage battery",
+    "solar_label": "Our commitment",
+    "solar_text": "Les Terrasses generates its own electricity through solar energy. Your stay is powered mainly by the Madeiran sun, reducing our carbon footprint. The battery stores energy for nights and cloudy days.",
+    "checkout_instructions_label": "Departure instructions",
+    "checkout_text": "🕐 &nbsp;Deadline: <strong>11:00 AM</strong><br>🔑 &nbsp;Leave the key inside the room<br>🚪 &nbsp;The main door closes automatically<br>🧳 &nbsp;You may leave luggage at reception if you need more time",
+    "rating_text": "Your feedback helps us improve continuously.",
+    "farewell_title": "See you soon",
+    "farewell_text": "It has been a pleasure having you at Les Terrasses Suites. We hope to welcome you back to Madeira soon.",
+    "review_google": "Review on Google",
+    "review_booking": "Review on Booking",
+    "back_menu": "Back to menu",
+    "w0": "Clear sky",
+    "w1": "Mainly clear",
+    "w2": "Partly cloudy",
+    "w3": "Overcast",
+    "w45": "Foggy",
+    "w51": "Drizzle",
+    "w61": "Light rain",
+    "w63": "Moderate rain",
+    "w80": "Showers",
+    "w95": "Thunderstorm",
+    "merchan_desc": "Local supermarket with fresh and local products.",
+    "amanhecer_desc": "Neighbourhood supermarket with local products and long opening hours.",
+    "comment_label": "Anything you would like to share with us?",
+    "comment_placeholder": "Your feedback is very valuable to us...",
+    "send_comment_btn": "Send comment",
+    "req_sheets_sub": "Once a week · Accident: let us know",
+    "req_clean_sub": "Full cleaning: +€25",
+    "late_modal_title": "⏰ Late Check-out",
+    "late_modal_text": "Late check-out is subject to availability.<br><br>To request it, please contact us directly:<br><br>📲 &nbsp;<strong>WhatsApp / Phone</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>Email</strong><br>lesterrassessuites@gmail.com",
+    "early_modal_title": "🌅 Early Check-in",
+    "early_modal_text": "Early check-in is subject to availability.<br><br>To request it, please contact us directly:<br><br>📲 &nbsp;<strong>WhatsApp / Phone</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>Email</strong><br>lesterrassessuites@gmail.com",
+    "incident_modal_title": "⚠️ Incident / Problem",
+    "incident_modal_text": "We are here to help you immediately.<br><br>Please contact us <strong style=\"color:var(--black)\">preferably via WhatsApp or phone call</strong> so we can assist you as quickly as possible.<br><br>📲 &nbsp;<strong>+351 924 965 570</strong><br><br>We will respond as soon as possible.",
+    "req_incident_sub": "WhatsApp · Direct call"
+  },
+  "de": {
+    "greeting": "Willkommen in Ihrer Suite",
+    "start": "Eintreten",
+    "guest_label": "Gast",
+    "checkin_label": "Check-in",
+    "checkout_label": "Check-out",
+    "time_label": "Ortszeit",
+    "weather_label": "Wetter in Calheta",
+    "weather_loading": "Wird geladen...",
+    "menu_title": "Wie können wir Ihnen helfen?",
+    "ci": "Check-in",
+    "cid": "Willkommen · WLAN · Zugänge · Hausregeln",
+    "r": "Mein Zimmer",
+    "rd": "Kaffee · Klimaanlage · TV · Ausstattung",
+    "rq": "Anfragen",
+    "rqd": "Handtücher · Amenities · Probleme",
+    "ca": "Calheta entdecken",
+    "cad": "Restaurants · Strände · Levadas · Tipps",
+    "so": "Nachhaltigkeit",
+    "sod": "Solarenergie · Umweltauswirkungen",
+    "co": "Check-out",
+    "cod": "Bewertung · Abreiseanweisungen",
+    "back": "Hauptmenü",
+    "script_checkin": "Willkommen",
+    "script_room": "Ihr Zuhause auf Madeira",
+    "script_req": "Wir sind für Sie da",
+    "script_cal": "Unsere Empfehlungen",
+    "script_sol": "Powered by Madeiras Sonne",
+    "script_co": "Auf Wiedersehen",
+    "title_checkin": "Check-in",
+    "title_room": "Mein Zimmer",
+    "title_req": "Anfragen",
+    "title_cal": "Calheta entdecken",
+    "title_sol": "Nachhaltigkeit",
+    "title_co": "Check-out",
+    "wifi_label": "WLAN · Netzwerk",
+    "wifi_note": "Passwort: Calheta2024 · Überall auf dem Grundstück verfügbar",
+    "qr_connect": "Schnellverbindung",
+    "qr_scan": "Kamera auf den QR-Code richten und sofort verbinden.",
+    "checkin_time_label": "Check-in",
+    "checkin_time_val": "15:00 — 19:00 Uhr",
+    "checkin_time_note": "Außerhalb dieser Zeiten fällt ein Zuschlag von 25 Euro an. Bitte im Voraus anfragen.",
+    "checkout_time_label": "Check-out",
+    "checkout_time_val": "bis 11:00 Uhr",
+    "checkout_time_note": "Später Check-out auf Anfrage möglich. Je nach Verfügbarkeit.",
+    "rules_label": "Bitte beachten Sie",
+    "rule1": "Nichtrauchergebäude",
+    "rule2": "Keine Haustiere erlaubt",
+    "rule3": "Ruhezeit ab 22:00 Uhr",
+    "rule4": "Müll vor der Zimmertür abstellen und Bescheid geben",
+    "promise_label": "✨ Unser Versprechen",
+    "promise_quote": "Ihr Wohlbefinden ist unsere einzige Priorität",
+    "promise_text": "Bei Les Terrasses gibt es keine Rezeption — aber etwas viel Besseres: <strong>persönliche, direkte Betreuung</strong>. Jeder Gast zählt, jedes Detail zählt.<br><br>Wenn Sie etwas brauchen — groß oder klein — zögern Sie bitte nicht. Wir sind hier, um Ihren Aufenthalt auf Madeira unvergesslich zu machen.<br><br>✉️ &nbsp;<strong>Email</strong> · lesterrassessuites@gmail.com<br>📞 &nbsp;<strong>Telefon</strong> · +351 924 965 570<br>✉️ &nbsp;<strong>E-Mail</strong> · lesterrassessuites@gmail.com",
+    "contact_label": "Kontakt · E-Mail",
+    "contact_val": "lesterrassessuites@gmail.com",
+    "contact_note": "Gabriel · Eigentümer · 24h erreichbar · Tippen um E-Mail zu senden",
+    "ac_label": "Klimaanlage · Heizung",
+    "ac_text": "Die Fernbedienung liegt auf dem Nachttisch.<br>Empfohlene Temperatur: 21-23 Grad.<br>Bitte beim Verlassen ausschalten.",
+    "stone_label": "🪨 Der lebende Stein Madeiras",
+    "stone_quote": "Jeder Stein trägt 10.000 Jahre Vulkangeschichte in sich",
+    "stone_text": "Die Badezimmerwände Ihrer Suite sind mit Basaltstein aus Madeira verkleidet. Es ist keine Dekoration — es ist die Insel selbst.<br><br>🌋 &nbsp;Dieser Stein <strong>atmet</strong>. Er ist vulkanisch, lebendig, und hat seinen eigenen Duft: mineralisch, frisch, tief. Dieser leichte Erdgeruch ist kein Fehler — er ist die <strong>Signatur der Natur</strong>.<br><br>✅ &nbsp;Der Stein wurde <strong>professionell behandelt</strong>, ist schimmelfrei und versiegelt.<br><br>🏆 &nbsp;Bei Les Terrasses schlafen Sie nicht <em>auf</em> Madeira — Sie schlafen <em>in</em> Madeira.",
+    "pool_label": "Öffnungszeiten · Regeln",
+    "pool_text": "🕘 &nbsp;Geöffnet von <strong>09:00 bis 21:00 Uhr</strong><br>🚶 &nbsp;Zugang nur über die Treppe<br>🏃 &nbsp;Rennen verboten<br>🤸 &nbsp;Springen ins Wasser verboten",
+    "pool_towels_label": "🏊 Poolhandtücher",
+    "pool_towels_val": "Tippen um Poolhandtücher anzufordern",
+    "pool_towels_note": "Eine Anfrage wird per WhatsApp gesendet · Antwort in weniger als 15 Min.",
+    "coffee_step1": "Füllen Sie den Wassertank und schalten Sie die Maschine ein.",
+    "coffee_step2": "Legen Sie eine Nespresso-Kapsel ein und schließen Sie den Hebel.",
+    "coffee_step3": "Stellen Sie Ihre Tasse unter den Auslauf und drücken Sie den Knopf.",
+    "coffee_step4": "Kapseln finden Sie im Schrank. Weitere gibt es im Supermarkt.",
+    "coffee_buy_label": "💡 Wo kompatible Kapseln kaufen",
+    "coffee_buy_text": "🛒 &nbsp;<strong>Pingo Doce</strong> · 8 min mit dem Auto<br>🛒 &nbsp;<strong>Continente</strong> · R. dos Dragoeiros 59, Ribeira Brava · 20 min mit dem Auto<br><small>Nespresso-kompatible Kapseln suchen</small>",
+    "tv_label": "Smart TV · Streaming",
+    "tv_text": "Zugang zu Netflix, YouTube und Browser inklusive.<br><strong style=\"color:#7A7355\">HOME</strong> drücken um zurückzukehren.",
+    "req_towels": "Handtücher extra",
+    "req_pillows": "Kissen extra",
+    "req_amenities": "Toilettenartikel",
+    "req_sheets": "Bettwäschewechsel",
+    "req_trash": "Müllentsorgung",
+    "req_clean": "Zimmerreinigung",
+    "req_blanket": "Extra Decke",
+    "req_coffee": "Kaffee extra",
+    "req_late": "Später Check-out",
+    "req_late_sub": "Je nach Verfügbarkeit",
+    "req_early": "Früher Check-in",
+    "req_early_sub": "Je nach Verfügbarkeit",
+    "req_incident": "Vorfall / Problem",
+    "req_footer": "Ihre Anfrage wird per E-Mail gesendet. Reaktionszeit: unter 15 Minuten.",
+    "div_lunch": "Mittagessen und Abendessen",
+    "div_breakfast": "Frühstück",
+    "div_nature": "Levadas · Wandern",
+    "div_services": "Supermärkte",
+    "r1d": "Das Meeresfrüchterestaurant der Region. Unglaublich frisch und authentisch.",
+    "r2d": "Handgemachtes Gelato. Perfekt für eine Pause.",
+    "r3d": "Gegrilltes Fleisch in entspannter Atmosphäre. Ideal für ein Abendessen.",
+    "r4d": "Traditionelle madeirische Küche. Authentisch und familiär.",
+    "r5d": "Lebhafte Bar mit Tapas und Cocktails.",
+    "r6d": "Restaurant in historischem Ambiente mit lokalen Weinen.",
+    "r7d": "Frühstück und Gebäck. Gemütlicher Start in den Tag.",
+    "r8d": "Frühstück mit Meerblick. Der perfekte Morgen auf Madeira.",
+    "supermarket": "Der nächste Supermarkt. Täglich bis 21:00 Uhr geöffnet.",
+    "supermarket_tag": "8 Min. mit dem Auto",
+    "solar_panels": "Installierte Photovoltaikpanele",
+    "solar_inverter": "Wechselrichterleistung",
+    "solar_battery": "Speicherbatterie",
+    "solar_label": "Unser Engagement",
+    "solar_text": "Les Terrasses erzeugt seinen eigenen Strom durch Solarenergie. Ihr Aufenthalt wird durch die Sonne Madeiras versorgt.",
+    "checkout_instructions_label": "Abreiseanweisungen",
+    "checkout_text": "🕐 &nbsp;Späteste Abreise: <strong>11:00 Uhr</strong><br>🔑 &nbsp;Schlüssel bitte im Zimmer lassen<br>🚪 &nbsp;Die Tür schließt automatisch<br>🧳 &nbsp;Gepäck kann aufbewahrt werden",
+    "rating_text": "Ihr Feedback hilft uns, uns zu verbessern.",
+    "farewell_title": "Auf Wiedersehen",
+    "farewell_text": "Es war uns eine Freude, Sie bei Les Terrasses zu begrüßen. Wir hoffen, Sie bald wieder willkommen zu heißen.",
+    "review_google": "Bewertung auf Google",
+    "review_booking": "Bewertung auf Booking",
+    "back_menu": "Zurück zum Menü",
+    "w0": "Klarer Himmel",
+    "w1": "Überwiegend klar",
+    "w2": "Teilweise bewölkt",
+    "w3": "Bewölkt",
+    "w45": "Neblig",
+    "w51": "Nieselregen",
+    "w61": "Leichter Regen",
+    "w63": "Mäßiger Regen",
+    "w80": "Schauer",
+    "w95": "Gewitter",
+    "merchan_desc": "Lokaler Supermarkt mit frischen und regionalen Produkten.",
+    "amanhecer_desc": "Nahversorger mit lokalen Produkten und langen Öffnungszeiten.",
+    "comment_label": "Möchten Sie uns etwas mitteilen?",
+    "comment_placeholder": "Ihr Kommentar ist uns sehr wertvoll...",
+    "send_comment_btn": "Kommentar senden",
+    "req_sheets_sub": "1x pro Woche · Unfall: bitte Bescheid geben",
+    "req_clean_sub": "Grundreinigung: +25€",
+    "late_modal_title": "⏰ Später Check-out",
+    "late_modal_text": "Später Check-out ist je nach Verfügbarkeit möglich.<br><br>Bitte kontaktieren Sie uns direkt:<br><br>📲 &nbsp;<strong>WhatsApp / Telefon</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>E-Mail</strong><br>lesterrassessuites@gmail.com",
+    "early_modal_title": "🌅 Früher Check-in",
+    "early_modal_text": "Früher Check-in ist je nach Verfügbarkeit möglich.<br><br>Bitte kontaktieren Sie uns direkt:<br><br>📲 &nbsp;<strong>WhatsApp / Telefon</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>E-Mail</strong><br>lesterrassessuites@gmail.com",
+    "incident_modal_title": "⚠️ Vorfall / Problem",
+    "incident_modal_text": "Wir sind sofort für Sie da.<br><br>Bitte kontaktieren Sie uns <strong style=\"color:var(--black)\">vorzugsweise per WhatsApp oder Anruf</strong> damit wir Ihnen so schnell wie möglich helfen können.<br><br>📲 &nbsp;<strong>+351 924 965 570</strong><br><br>Wir antworten so schnell wie möglich.",
+    "req_incident_sub": "WhatsApp · Direktanruf"
+  },
+  "fr": {
+    "greeting": "Bienvenue dans votre suite",
+    "start": "Entrer",
+    "guest_label": "Client",
+    "checkin_label": "Arrivée",
+    "checkout_label": "Départ",
+    "time_label": "Heure locale",
+    "weather_label": "Météo à Calheta",
+    "weather_loading": "Chargement...",
+    "menu_title": "Comment pouvons-nous vous aider?",
+    "ci": "Check-in",
+    "cid": "Bienvenue · WiFi · Accès · Règles",
+    "r": "Ma Chambre",
+    "rd": "Café · Climatisation · TV · Équipements",
+    "rq": "Demandes",
+    "rqd": "Serviettes · Amenities · Incidents",
+    "ca": "Découvrir Calheta",
+    "cad": "Restaurants · Plages · Levadas · Conseils",
+    "so": "Durabilité",
+    "sod": "Énergie solaire · Impact environnemental",
+    "co": "Check-out",
+    "cod": "Évaluation · Instructions de départ",
+    "back": "Menu principal",
+    "script_checkin": "Bienvenue",
+    "script_room": "Votre maison à Madère",
+    "script_req": "Nous sommes là",
+    "script_cal": "Nos favoris",
+    "script_sol": "Propulsé par le soleil de Madère",
+    "script_co": "À bientôt",
+    "title_checkin": "Check-in",
+    "title_room": "Ma Chambre",
+    "title_req": "Demandes",
+    "title_cal": "Découvrir Calheta",
+    "title_sol": "Durabilité",
+    "title_co": "Check-out",
+    "wifi_label": "WiFi · Réseau",
+    "wifi_note": "Mot de passe: Calheta2024 · Disponible dans toute la propriété",
+    "qr_connect": "Connexion rapide",
+    "qr_scan": "Pointez votre téléphone vers le QR pour vous connecter.",
+    "checkin_time_label": "Arrivée",
+    "checkin_time_val": "15h00 — 19h00",
+    "checkin_time_note": "En dehors de ces horaires, un supplément de 25 euros est appliqué.",
+    "checkout_time_label": "Départ",
+    "checkout_time_val": "avant 11h00",
+    "checkout_time_note": "Départ tardif disponible sur demande selon disponibilité.",
+    "rules_label": "Veuillez noter",
+    "rule1": "Propriété non-fumeur",
+    "rule2": "Animaux non admis",
+    "rule3": "Silence à partir de 22h00",
+    "rule4": "Laissez les ordures à entrée de votre chambre et avertissez-nous",
+    "promise_label": "✨ Notre promesse",
+    "promise_quote": "Votre bien-être est notre seule priorité",
+    "promise_text": "Chez Les Terrasses, nous avons quelque chose de bien mieux que la réception: <strong>une attention personnelle et directe</strong>. Chaque client compte.<br><br>Si vous avez besoin de quoi que ce soit, nous sommes là.<br><br>✉️ &nbsp;<strong>Email</strong> · lesterrassessuites@gmail.com<br>📞 &nbsp;<strong>Téléphone</strong> · +351 924 965 570<br>✉️ &nbsp;<strong>E-mail</strong> · lesterrassessuites@gmail.com",
+    "contact_label": "Contact · E-mail",
+    "contact_val": "lesterrassessuites@gmail.com",
+    "contact_note": "Gabriel · Propriétaire · Disponible 24h · Appuyez pour envoyer un e-mail",
+    "ac_label": "Climatisation · Chauffage",
+    "ac_text": "La télécommande se trouve sur la table de nuit.<br>Température recommandée: 21-23 degrés.<br>Veuillez éteindre en quittant la chambre.",
+    "stone_label": "🪨 La pierre vivante de Madère",
+    "stone_quote": "Chaque pierre renferme 10 000 ans de histoire volcanique",
+    "stone_text": "Les murs de la salle de bain sont habillés de pierre basaltique naturelle de Madère. Ce nest pas de la décoration — cest ile elle-même.<br><br>🌋 &nbsp;Cette pierre <strong>respire</strong>. Elle est volcanique, vivante. Cette légère odeur de terre nest pas un défaut — cest la <strong>signature de la nature</strong>.<br><br>✅ &nbsp;La pierre a été <strong>traitée professionnellement</strong>, sans moisissures.<br><br>🏆 &nbsp;Chez Les Terrasses, vous dormez <em>dans</em> Madère.",
+    "pool_label": "Horaires · Règles",
+    "pool_text": "🕘 &nbsp;Ouverte de <strong>9h00 à 21h00</strong><br>🚶 &nbsp;Accès uniquement par les escaliers<br>🏃 &nbsp;Interdit de courir<br>🤸 &nbsp;Interdit de plonger",
+    "pool_towels_label": "🏊 Serviettes de piscine",
+    "pool_towels_val": "Appuyez ici pour demander des serviettes",
+    "pool_towels_note": "Une demande sera envoyée par WhatsApp · Réponse en moins de 15 min",
+    "coffee_step1": "Remplissez le réservoir et allumez la machine.",
+    "coffee_step2": "Insérez une capsule Nespresso et fermez le levier.",
+    "coffee_step3": "Placez votre tasse et appuyez sur le bouton.",
+    "coffee_step4": "Des capsules sont disponibles dans le placard. Achetez-en au supermarché.",
+    "coffee_buy_label": "💡 Où acheter des capsules",
+    "coffee_buy_text": "🛒 &nbsp;<strong>Pingo Doce</strong> · 8 min en voiture<br>🛒 &nbsp;<strong>Continente</strong> · R. dos Dragoeiros 59, Ribeira Brava · 20 min en voiture<br><small>Cherchez les capsules compatibles Nespresso</small>",
+    "tv_label": "Smart TV · Streaming",
+    "tv_text": "Accès à Netflix, YouTube et navigateur inclus.<br>Appuyez sur <strong style=\"color:#7A7355\">HOME</strong> pour revenir.",
+    "req_towels": "Serviettes supplémentaires",
+    "req_pillows": "Oreillers supplémentaires",
+    "req_amenities": "Articles de toilette",
+    "req_sheets": "Changement de draps",
+    "req_trash": "Ramassage des ordures",
+    "req_clean": "Nettoyage de chambre",
+    "req_blanket": "Couverture supplémentaire",
+    "req_coffee": "Café supplémentaire",
+    "req_late": "Départ tardif",
+    "req_late_sub": "Selon disponibilité",
+    "req_early": "Arrivée anticipée",
+    "req_early_sub": "Selon disponibilité",
+    "req_incident": "Incident / Problème",
+    "req_footer": "Votre demande sera envoyée par e-mail. Réponse en moins de 15 minutes.",
+    "div_lunch": "Déjeuner et Dîner",
+    "div_breakfast": "Petit-déjeuner",
+    "div_nature": "Levadas · Randonnée",
+    "div_services": "Supermarchés",
+    "r1d": "Le restaurant de fruits de mer de référence. Incroyablement frais.",
+    "r2d": "Glaces artisanales et douceurs. Parfait pour une pause.",
+    "r3d": "Viandes grillées dans une ambiance décontractée.",
+    "r4d": "Cuisine madérienne traditionnelle. Authentique et familial.",
+    "r5d": "Bar animé avec tapas et cocktails.",
+    "r6d": "Restaurant historique avec vins locaux. Idéal pour un dîner romantique.",
+    "r7d": "Petits-déjeuners italiens et pâtisserie artisanale.",
+    "r8d": "Petits-déjeuners avec vue sur la mer.",
+    "supermarket": "Le supermarché le plus proche. Ouvert tous les jours jusqu à 21h.",
+    "supermarket_tag": "8 min en voiture",
+    "solar_panels": "Panneaux photovoltaïques installés",
+    "solar_inverter": "Puissance de onduleur",
+    "solar_battery": "Batterie de stockage",
+    "solar_label": "Notre engagement",
+    "solar_text": "Les Terrasses produit sa propre électricité grâce à énergie solaire de Madère.",
+    "checkout_instructions_label": "Instructions de départ",
+    "checkout_text": "🕐 &nbsp;Heure limite: <strong>11h00</strong><br>🔑 &nbsp;Laissez la clé à intérieur<br>🚪 &nbsp;La porte se ferme automatiquement<br>🧳 &nbsp;Bagages: renseignez-vous",
+    "rating_text": "Votre avis nous aide à nous améliorer.",
+    "farewell_title": "À bientôt",
+    "farewell_text": "Ce fut un plaisir de vous accueillir. Nous espérons vous revoir bientôt à Madère.",
+    "review_google": "Avis sur Google",
+    "review_booking": "Avis sur Booking",
+    "back_menu": "Retour au menu",
+    "w0": "Ciel dégagé",
+    "w1": "Principalement dégagé",
+    "w2": "Partiellement nuageux",
+    "w3": "Nuageux",
+    "w45": "Brouillard",
+    "w51": "Bruine",
+    "w61": "Pluie légère",
+    "w63": "Pluie modérée",
+    "w80": "Averses",
+    "w95": "Orage",
+    "merchan_desc": "Supermarché local avec produits frais et de proximité.",
+    "amanhecer_desc": "Supermarché de quartier avec produits locaux et horaires étendus.",
+    "comment_label": "Souhaitez-vous nous partager quelque chose?",
+    "comment_placeholder": "Votre commentaire est très précieux pour nous...",
+    "send_comment_btn": "Envoyer le commentaire",
+    "req_sheets_sub": "1 fois par semaine · Accident: prévenez-nous",
+    "req_clean_sub": "Nettoyage complet: +25€",
+    "late_modal_title": "⏰ Départ tardif",
+    "late_modal_text": "Le départ tardif est soumis à disponibilité.<br><br>Pour le demander, contactez-nous directement:<br><br>📲 &nbsp;<strong>WhatsApp / Téléphone</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>E-mail</strong><br>lesterrassessuites@gmail.com",
+    "early_modal_title": "🌅 Arrivée anticipée",
+    "early_modal_text": "L'arrivée anticipée est soumise à disponibilité.<br><br>Pour la demander, contactez-nous directement:<br><br>📲 &nbsp;<strong>WhatsApp / Téléphone</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>E-mail</strong><br>lesterrassessuites@gmail.com",
+    "incident_modal_title": "⚠️ Incident / Problème",
+    "incident_modal_text": "Nous sommes là pour vous aider immédiatement.<br><br>Veuillez nous contacter <strong style=\"color:var(--black)\">de préférence par WhatsApp ou par téléphone</strong> pour que nous puissions vous aider le plus rapidement possible.<br><br>📲 &nbsp;<strong>+351 924 965 570</strong><br><br>Nous répondrons dans les plus brefs délais.",
+    "req_incident_sub": "WhatsApp · Appel direct"
+  },
+  "nl": {
+    "greeting": "Welkom in uw suite",
+    "start": "Binnenkomen",
+    "guest_label": "Gast",
+    "checkin_label": "Check-in",
+    "checkout_label": "Check-out",
+    "time_label": "Lokale tijd",
+    "weather_label": "Weer in Calheta",
+    "weather_loading": "Laden...",
+    "menu_title": "Hoe kunnen wij u helpen?",
+    "ci": "Check-in",
+    "cid": "Welkom · WiFi · Toegang · Huisregels",
+    "r": "Mijn Kamer",
+    "rd": "Koffie · Klimaat · TV · Voorzieningen",
+    "rq": "Verzoeken",
+    "rqd": "Handdoeken · Toiletartikelen · Problemen",
+    "ca": "Ontdek Calheta",
+    "cad": "Restaurants · Stranden · Levadas · Tips",
+    "so": "Duurzaamheid",
+    "sod": "Zonne-energie · Milieu-impact",
+    "co": "Check-out",
+    "cod": "Beoordeling · Vertrekinstructies",
+    "back": "Hoofdmenu",
+    "script_checkin": "Welkom",
+    "script_room": "Uw thuis op Madeira",
+    "script_req": "Wij zijn er voor u",
+    "script_cal": "Onze favorieten",
+    "script_sol": "Op zonne-energie van Madeira",
+    "script_co": "Tot ziens",
+    "title_checkin": "Check-in",
+    "title_room": "Mijn Kamer",
+    "title_req": "Verzoeken",
+    "title_cal": "Ontdek Calheta",
+    "title_sol": "Duurzaamheid",
+    "title_co": "Check-out",
+    "wifi_label": "WiFi · Netwerk",
+    "wifi_note": "Wachtwoord: Calheta2024 · Beschikbaar in het hele pand",
+    "qr_connect": "Snel verbinden",
+    "qr_scan": "Richt uw camera op de QR-code om direct te verbinden.",
+    "checkin_time_label": "Check-in",
+    "checkin_time_val": "15:00 — 19:00 uur",
+    "checkin_time_note": "Buiten deze tijden geldt een toeslag van 25 euro. Vraag vooraf.",
+    "checkout_time_label": "Check-out",
+    "checkout_time_val": "voor 11:00 uur",
+    "checkout_time_note": "Laat uitchecken beschikbaar op verzoek afhankelijk van beschikbaarheid.",
+    "rules_label": "Let op",
+    "rule1": "Rookvrij pand",
+    "rule2": "Geen huisdieren toegestaan",
+    "rule3": "Stilte vanaf 22:00 uur",
+    "rule4": "Zet afval bij de ingang van uw kamer en laat het ons weten",
+    "promise_label": "✨ Onze belofte",
+    "promise_quote": "Uw welzijn is onze enige prioriteit",
+    "promise_text": "Bij Les Terrasses hebben we geen receptie — we hebben iets veel beters: <strong>persoonlijke, directe aandacht</strong>. Elke gast telt.<br><br>Als u iets nodig heeft, aarzel dan niet.<br><br>✉️ &nbsp;<strong>Email</strong> · lesterrassessuites@gmail.com<br>📞 &nbsp;<strong>Telefoon</strong> · +351 924 965 570<br>✉️ &nbsp;<strong>E-mail</strong> · lesterrassessuites@gmail.com",
+    "contact_label": "Contact · E-mail",
+    "contact_val": "lesterrassessuites@gmail.com",
+    "contact_note": "Gabriel · Eigenaar · 24u beschikbaar · Tik om e-mail te sturen",
+    "ac_label": "Airconditioning · Verwarming",
+    "ac_text": "De afstandsbediening ligt op het nachtkastje.<br>Aanbevolen temperatuur: 21-23 graden.<br>Zet uit bij het verlaten van de kamer.",
+    "stone_label": "🪨 De levende steen van Madeira",
+    "stone_quote": "Elke steen draagt 10.000 jaar vulkanische geschiedenis",
+    "stone_text": "De badkamerwanden zijn bekleed met natuurlijke basaltsteen uit Madeira. Dit is geen decoratie — het is het eiland zelf.<br><br>🌋 &nbsp;Deze steen <strong>ademt</strong>. Hij is vulkanisch, levend. Die subtiele aardse geur is geen gebrek — het is de <strong>handtekening van de natuur</strong>.<br><br>✅ &nbsp;De steen is <strong>professioneel behandeld</strong>, schimmelvrij en verzegeld.<br><br>🏆 &nbsp;Bij Les Terrasses slaapt u <em>in</em> Madeira.",
+    "pool_label": "Openingstijden · Regels",
+    "pool_text": "🕘 &nbsp;Open van <strong>09:00 tot 21:00 uur</strong><br>🚶 &nbsp;Toegang alleen via de trap<br>🏃 &nbsp;Rennen verboden<br>🤸 &nbsp;Springen verboden",
+    "pool_towels_label": "🏊 Zwembadhanddoeken",
+    "pool_towels_val": "Tik hier om zwembadhanddoeken aan te vragen",
+    "pool_towels_note": "Er wordt een verzoek via WhatsApp verzonden · Reactie binnen 15 min",
+    "coffee_step1": "Vul het waterreservoir en zet het apparaat aan.",
+    "coffee_step2": "Plaats een Nespresso-capsule en sluit de hendel.",
+    "coffee_step3": "Zet uw kopje onder de uitloop en druk op de knop.",
+    "coffee_step4": "U vindt capsules in de kast. Koop meer bij de supermarkt.",
+    "coffee_buy_label": "💡 Waar capsules kopen",
+    "coffee_buy_text": "🛒 &nbsp;<strong>Pingo Doce</strong> · 8 min met de auto<br>🛒 &nbsp;<strong>Continente</strong> · R. dos Dragoeiros 59, Ribeira Brava · 20 min met de auto<br><small>Zoek Nespresso-compatibele capsules</small>",
+    "tv_label": "Smart TV · Streaming",
+    "tv_text": "Toegang tot Netflix, YouTube en browser.<br>Druk op <strong style=\"color:#7A7355\">HOME</strong> om terug te keren.",
+    "req_towels": "Extra handdoeken",
+    "req_pillows": "Extra kussens",
+    "req_amenities": "Toiletartikelen",
+    "req_sheets": "Beddengoed wisselen",
+    "req_trash": "Afval ophalen",
+    "req_clean": "Kamer schoonmaken",
+    "req_blanket": "Extra deken",
+    "req_coffee": "Extra koffie",
+    "req_late": "Laat uitchecken",
+    "req_late_sub": "Afhankelijk van beschikbaarheid",
+    "req_early": "Vroeg inchecken",
+    "req_early_sub": "Afhankelijk van beschikbaarheid",
+    "req_incident": "Incident / Probleem",
+    "req_footer": "Uw verzoek wordt per e-mail verzonden. Reactietijd: minder dan 15 minuten.",
+    "div_lunch": "Lunch en Diner",
+    "div_breakfast": "Ontbijt",
+    "div_nature": "Levadas · Wandelen",
+    "div_services": "Supermarkten",
+    "r1d": "Het zeevruchtengrestaurant van de regio. Ongelooflijk vers.",
+    "r2d": "Ambachtelijk gelato. Perfect voor een pauze.",
+    "r3d": "Gegrild vlees in ontspannen sfeer.",
+    "r4d": "Traditionele Madeiriaanse keuken. Authentiek en familiaal.",
+    "r5d": "Levendige bar met tapas en cocktails.",
+    "r6d": "Restaurant in historische omgeving met lokale wijnen.",
+    "r7d": "Italiaanse ontbijten en ambachtelijk gebak.",
+    "r8d": "Ontbijt met zeezicht. De perfecte ochtend op Madeira.",
+    "supermarket": "De dichtstbijzijnde supermarkt. Elke dag open tot 21:00 uur.",
+    "supermarket_tag": "8 min met de auto",
+    "solar_panels": "Geïnstalleerde zonnepanelen",
+    "solar_inverter": "Omvormervermogen",
+    "solar_battery": "Opslagbatterij",
+    "solar_label": "Onze toewijding",
+    "solar_text": "Les Terrasses wekt zijn eigen elektriciteit op via zonne-energie van Madeira.",
+    "checkout_instructions_label": "Vertrekinstructies",
+    "checkout_text": "🕐 &nbsp;Uiterste tijd: <strong>11:00 uur</strong><br>🔑 &nbsp;Laat de sleutel in de kamer<br>🚪 &nbsp;De deur sluit automatisch<br>🧳 &nbsp;Bagage kan achtergelaten worden",
+    "rating_text": "Uw feedback helpt ons te verbeteren.",
+    "farewell_title": "Tot ziens",
+    "farewell_text": "Het was een genoegen u te ontvangen. We hopen u snel weer te verwelkomen op Madeira.",
+    "review_google": "Beoordeling op Google",
+    "review_booking": "Beoordeling op Booking",
+    "back_menu": "Terug naar menu",
+    "w0": "Helder",
+    "w1": "Grotendeels helder",
+    "w2": "Gedeeltelijk bewolkt",
+    "w3": "Bewolkt",
+    "w45": "Mist",
+    "w51": "Motregen",
+    "w61": "Lichte regen",
+    "w63": "Matige regen",
+    "w80": "Buien",
+    "w95": "Onweer",
+    "merchan_desc": "Lokale supermarkt met verse en lokale producten.",
+    "amanhecer_desc": "Buurtsuper met lokale producten en ruime openingstijden.",
+    "comment_label": "Wilt u iets met ons delen?",
+    "comment_placeholder": "Uw opmerking is zeer waardevol voor ons...",
+    "send_comment_btn": "Opmerking verzenden",
+    "req_sheets_sub": "1x per week · Ongeluk: laat het ons weten",
+    "req_clean_sub": "Volledige schoonmaak: +€25",
+    "late_modal_title": "⏰ Laat uitchecken",
+    "late_modal_text": "Laat uitchecken is afhankelijk van beschikbaarheid.<br><br>Neem direct contact met ons op:<br><br>📲 &nbsp;<strong>WhatsApp / Telefoon</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>E-mail</strong><br>lesterrassessuites@gmail.com",
+    "early_modal_title": "🌅 Vroeg inchecken",
+    "early_modal_text": "Vroeg inchecken is afhankelijk van beschikbaarheid.<br><br>Neem direct contact met ons op:<br><br>📲 &nbsp;<strong>WhatsApp / Telefoon</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>E-mail</strong><br>lesterrassessuites@gmail.com",
+    "incident_modal_title": "⚠️ Incident / Probleem",
+    "incident_modal_text": "Wij zijn er direct voor u.<br><br>Neem <strong style=\"color:var(--black)\">bij voorkeur contact op via WhatsApp of telefoon</strong> zodat wij u zo snel mogelijk kunnen helpen.<br><br>📲 &nbsp;<strong>+351 924 965 570</strong><br><br>Wij reageren zo snel mogelijk.",
+    "req_incident_sub": "WhatsApp · Direct bellen"
+  }
+};
+
+// READ URL PARAMS (set by admin panel)
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var name = params.get('name');
+  var lang = params.get('lang');
+  var checkin = params.get('checkin');
+  var checkout = params.get('checkout');
+  var suitename = params.get('suitename');
+
+  if(name){
+    var el = document.querySelector('.guest-name-display');
+    if(el) el.textContent = name;
+  }
+  if(checkin){
+    var d = new Date(checkin);
+    var ci = document.getElementById('checkin-date');
+    if(ci) ci.textContent = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  }
+  if(checkout){
+    var d2 = new Date(checkout);
+    var co = document.getElementById('checkout-date');
+    if(co) co.textContent = d2.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  }
+  if(suitename){
+    var sb = document.getElementById('suite-badge');
+    if(sb) sb.textContent = suitename;
+  }
+  if(lang && ['en','nl','de','fr','es','pt'].indexOf(lang) !== -1){
+    // Auto-select language after page loads
+    window._autoLang = lang;
+  }
+})();
+
+
+// ============================================================
+// GOOGLE SHEETS INTEGRATION
+// Reads guest data from Les Terrasses booking spreadsheet
+// ============================================================
+
+var SHEET_ID = '1SEybsDTgxS7jSRKcaY8nLkFnwC5atCMkd71m0jEHaj0';
+var SUITE_NUMBER = getSuiteNumber(); // Gets suite from URL param or default
+
+function getSuiteNumber(){
+  var params = new URLSearchParams(window.location.search);
+  return params.get('suite') || '1';
+}
+
+function parseDate(str){
+  if(!str) return null;
+  // Format: DD.MM.YY or DD.MM.YYYY
+  var parts = str.trim().split('.');
+  if(parts.length < 3) return null;
+  var day = parseInt(parts[0]);
+  var month = parseInt(parts[1]) - 1;
+  var year = parseInt(parts[2]);
+  if(year < 100) year += 2000;
+  return new Date(year, month, day);
+}
+
+function formatDate(date, lang){
+  if(!date) return '—';
+  var opts = {day:'numeric', month:'short', year:'numeric'};
+  var locales = {en:'en-GB',nl:'nl-NL',de:'de-DE',fr:'fr-FR',es:'es-ES',pt:'pt-PT'};
+  var lb = document.querySelector('.lang-btn.active');
+  var l = lb ? lb.textContent.toLowerCase() : 'en';
+  return date.toLocaleDateString(locales[l]||'en-GB', opts);
+}
+
+function loadGuestFromSheets(){
+  var today = new Date();
+  today.setHours(0,0,0,0);
+  
+  // Try current and next month tabs
+  // Tab names in the spreadsheet: Febrero to Diciembre (Spanish)
+  // Tab names in UPPERCASE Spanish
+  var monthsES = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO',
+                  'JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+  var monthsESlow = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                     'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  var monthsPT = ['JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO',
+                  'JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'];
+  var monthsEN = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE',
+                  'JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+  
+  var currentMonth = monthsES[today.getMonth()];
+  var nextMonth = monthsES[(today.getMonth()+1) % 12];
+  
+  var sheetsToTry = [
+    currentMonth, nextMonth,
+    monthsESlow[today.getMonth()], monthsESlow[(today.getMonth()+1) % 12],
+    monthsPT[today.getMonth()],
+    monthsEN[today.getMonth()],
+    today.getMonth()+1,
+    String(today.getMonth()+1).padStart(2,'0')
+  ];
+  
+  tryLoadSheet(sheetsToTry, 0);
+}
+
+function tryLoadSheet(sheets, idx){
+  if(idx >= sheets.length){
+    console.log('No matching guest found in any sheet');
+    return;
+  }
+  
+  var sheetName = sheets[idx];
+  var url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + 
+            '/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent(sheetName);
+  
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.timeout = 8000;
+  xhr.onreadystatechange = function(){
+    if(xhr.readyState === 4){
+      if(xhr.status === 200 && xhr.responseText && !xhr.responseText.includes('errors')){
+        var found = parseSheetData(xhr.responseText);
+        if(!found) tryLoadSheet(sheets, idx+1);
+      } else {
+        tryLoadSheet(sheets, idx+1);
+      }
+    }
+  };
+  xhr.ontimeout = xhr.onerror = function(){ tryLoadSheet(sheets, idx+1); };
+  xhr.send();
+}
+
+function parseSheetData(csv){
+  var today = new Date();
+  today.setHours(0,0,0,0);
+  var suite = SUITE_NUMBER;
+  
+  // Parse CSV
+  var lines = csv.split('\n');
+  if(lines.length < 2) return false;
+  
+  // Find header row to identify columns
+  var header = lines[0];
+  var cols = parseCSVLine(header);
+  
+  // Find column indices
+  var nameCol = -1, checkinCol = -1, checkoutCol = -1;
+  var suite1Col = -1, suite2Col = -1, suite3Col = -1, suite4Col = -1;
+  
+  for(var i=0; i<cols.length; i++){
+    var c = cols[i].toLowerCase().trim();
+    if(c.includes('nombre') || c.includes('name')) nameCol = i;
+    if(c.includes('check in') || c === 'check in') checkinCol = i;
+    if(c.includes('check out') || c === 'check out') checkoutCol = i;
+  }
+  
+  // Suite columns - they appear after checkout as separate X columns
+  // Based on structure: col 5=suite1, col 6=suite2, col 7=suite3, col 8=suite4
+  // (after: nombre, pais, checkin, checkout, noches)
+  // Columns G,H,I,J = indices 6,7,8,9 (0-based after: nombre,pais,checkin,checkout,noches,empty)
+  suite1Col = 6; suite2Col = 7; suite3Col = 8; suite4Col = 9;
+  
+  var suiteColMap = {'1':suite1Col,'2':suite2Col,'3':suite3Col,'4':suite4Col};
+  var targetSuiteCol = suiteColMap[suite] || suite1Col;
+  
+  // Search each row
+  for(var r=1; r<lines.length; r++){
+    var line = lines[r].trim();
+    if(!line) continue;
+    
+    var row = parseCSVLine(line);
+    if(row.length < 4) continue;
+    
+    // Check if this row is for our suite (has x in suite column)
+    var suiteVal = row[targetSuiteCol] ? row[targetSuiteCol].trim().toLowerCase() : '';
+    if(suiteVal !== 'x') continue;
+    
+    // Parse dates
+    var checkin = parseDate(row[checkinCol >= 0 ? checkinCol : 2]);
+    var checkout = parseDate(row[checkoutCol >= 0 ? checkoutCol : 3]);
+    
+    if(!checkin || !checkout) continue;
+    
+    // Check if today is within stay
+    if(today >= checkin && today < checkout){
+      var name = row[nameCol >= 0 ? nameCol : 0].replace(/"/g,'').trim();
+      updateGuestCard(name, suite, checkin, checkout);
+      return true;
+    }
+  }
+  return false;
+}
+
+function parseCSVLine(line){
+  var result = [];
+  var current = '';
+  var inQuotes = false;
+  for(var i=0; i<line.length; i++){
+    var c = line[i];
+    if(c === '"') { inQuotes = !inQuotes; }
+    else if(c === ',' && !inQuotes) { result.push(current); current = ''; }
+    else { current += c; }
+  }
+  result.push(current);
+  return result;
+}
+
+function updateGuestCard(name, suite, checkin, checkout){
+  var nameEl = document.getElementById('guest-name');
+  var suiteEl = document.getElementById('suite-name');
+  var ciEl = document.getElementById('checkin-date');
+  var coEl = document.getElementById('checkout-date');
+  
+  if(nameEl) nameEl.textContent = name || 'Welcome';
+  if(suiteEl) suiteEl.textContent = 'Suite ' + suite;
+  if(ciEl) ciEl.textContent = formatDate(checkin);
+  if(coEl) coEl.textContent = formatDate(checkout);
+}
+
+// Load on startup
+setTimeout(loadGuestFromSheets, 1000);
+
+
+// CLOCK
+function updateClock(){
+  var n=new Date();
+  var t=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');
+  var el=document.getElementById('clock'); if(el) el.textContent=t;
+  var tc=document.getElementById('local-time-card'); if(tc) tc.textContent=t;
+}
+updateClock(); setInterval(updateClock,10000);
+
+// WEATHER
+// AUTO LANGUAGE
+setTimeout(function(){
+  if(window._autoLang){
+    var btn = document.querySelector('.lang-btn[onclick*="setLang(\'"+window._autoLang]');
+    if(!btn){ 
+      var btns = document.querySelectorAll('.lang-btn');
+      btns.forEach(function(b){ if(b.textContent.toLowerCase()===window._autoLang){ btn=b; }});
+    }
+    if(btn){ setLang(window._autoLang, btn); }
+  }
+}, 300);
+
+setTimeout(function(){
+  var xhr=new XMLHttpRequest();
+  xhr.open('GET','https://api.open-meteo.com/v1/forecast?latitude=32.7333&longitude=-17.1667&current=temperature_2m,weathercode,windspeed_10m&timezone=Atlantic%2FMadeira',true);
+  xhr.timeout=6000;
+  xhr.onreadystatechange=function(){
+    if(xhr.readyState===4&&xhr.status===200){
+      try{
+        var d=JSON.parse(xhr.responseText);
+        var temp=Math.round(d.current.temperature_2m);
+        var code=d.current.weathercode;
+        var wind=Math.round(d.current.windspeed_10m);
+        var icons={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',51:'🌦️',61:'🌧️',80:'🌦️',95:'⛈️'};
+        var wi=document.getElementById('weather-icon');
+        var wt=document.getElementById('weather-temp');
+        var wd=document.getElementById('weather-desc');
+        if(wi) wi.textContent=icons[code]||'🌤️';
+        if(wt) wt.textContent=temp+'°C · '+wind+' km/h';
+        if(wd) wd.textContent='';
+      }catch(e){}
+    }
+  };
+  xhr.ontimeout=xhr.onerror=function(){};
+  xhr.send();
+},2000);
+
+// NAVIGATION
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  var el=document.getElementById(id);
+  if(el){ el.classList.add('active'); el.scrollTop=0; }
+}
+function goToMenu(){
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('screen-menu').classList.add('active');
+}
+
+// LANGUAGE
+function setLang(l,btn){
+  document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  var t=TRANSLATIONS[l]; if(!t) return;
+  function st(id,v){ var el=document.getElementById(id); if(el&&v) el.textContent=v; }
+  function sh(id,v){ var el=document.getElementById(id); if(el&&v) el.innerHTML=v; }
+  st('greeting-text',t.greeting); st('start-btn',t.start);
+  st('guest-label',t.guest_label); st('checkin-label',t.checkin_label);
+  st('checkout-label',t.checkout_label); st('time-label',t.time_label);
+  st('weather-label',t.weather_label);
+  st('menu-title',t.menu_title);
+  st('card-checkin-title',t.ci); st('card-checkin-desc',t.cid);
+  st('card-room-title',t.r); st('card-room-desc',t.rd);
+  st('card-req-title',t.rq); st('card-req-desc',t.rqd);
+  st('card-cal-title',t.ca); st('card-cal-desc',t.cad);
+  st('card-sol-title',t.so); st('card-sol-desc',t.sod);
+  st('card-co-title',t.co); st('card-co-desc',t.cod);
+  ['checkin','room','req','cal','sol','co'].forEach(function(id){
+    st('back-'+id,t.back); st('title-'+id,t['title_'+id]); st('script-'+id,t['script_'+id]);
+  });
+  st('wifi-label',t.wifi_label); st('wifi-note',t.wifi_note);
+  st('qr-connect',t.qr_connect); st('qr-scan',t.qr_scan);
+  st('checkin-time-label',t.checkin_time_label); st('checkin-time-val',t.checkin_time_val);
+  st('checkin-time-note',t.checkin_time_note);
+  st('checkout-time-label',t.checkout_time_label); st('checkout-time-val',t.checkout_time_val);
+  st('checkout-time-note',t.checkout_time_note);
+  st('rules-label',t.rules_label);
+  sh('rules-text','🚭 &nbsp;'+t.rule1+'<br>🐾 &nbsp;'+t.rule2+'<br>🔇 &nbsp;'+t.rule3+'<br>🗑️ &nbsp;'+t.rule4);
+  st('promise-label',t.promise_label); st('promise-quote',t.promise_quote);
+  sh('promise-text',t.promise_text);
+  st('contact-label',t.contact_label); st('contact-val',t.contact_val); st('contact-note',t.contact_note);
+  st('ac-label',t.ac_label); sh('ac-text',t.ac_text);
+  st('stone-label',t.stone_label); st('stone-quote',t.stone_quote); sh('stone-text',t.stone_text);
+  st('pool-label',t.pool_label); sh('pool-text',t.pool_text);
+  st('pool-towels-label',t.pool_towels_label); st('pool-towels-val',t.pool_towels_val);
+  st('pool-towels-note',t.pool_towels_note);
+  st('coffee-step1',t.coffee_step1); st('coffee-step2',t.coffee_step2);
+  st('coffee-step3',t.coffee_step3); st('coffee-step4',t.coffee_step4);
+  st('coffee-buy-label',t.coffee_buy_label); sh('coffee-buy-text',t.coffee_buy_text);
+  st('tv-label',t.tv_label); sh('tv-text',t.tv_text);
+  st('req-towels',t.req_towels); st('req-pillows',t.req_pillows);
+  st('req-amenities',t.req_amenities); st('req-coffee',t.req_coffee);
+  st('req-blanket',t.req_blanket); st('req-trash',t.req_trash);
+  st('req-sheets',t.req_sheets); st('req-sheets-sub',t.req_sheets_sub);
+  st('req-clean',t.req_clean); st('req-clean-sub',t.req_clean_sub);
+  st('req-late',t.req_late); st('req-late-sub',t.req_late_sub);
+  st('req-early',t.req_early); st('req-early-sub',t.req_early_sub);
+  st('req-incident',t.req_incident); st('req-incident-sub',t.req_incident_sub);
+  st('req-footer',t.req_footer);
+  st('div-services',t.div_services); st('div-lunch',t.div_lunch);
+  st('div-breakfast',t.div_breakfast); st('div-nature',t.div_nature);
+  st('supermarket-desc',t.supermarket); st('supermarket-tag',t.supermarket_tag);
+  st('solar-panels',t.solar_panels); st('solar-inverter',t.solar_inverter);
+  st('solar-battery',t.solar_battery); st('solar-label',t.solar_label);
+  st('solar-text',t.solar_text);
+  st('checkout-instructions-label',t.checkout_instructions_label);
+  sh('checkout-text',t.checkout_text);
+  st('rating-text',t.rating_text);
+  st('farewell-title',t.farewell_title); st('farewell-text',t.farewell_text);
+  st('review-google',t.review_google); st('review-booking',t.review_booking);
+  st('back-menu-btn',t.back_menu);
+  st('comment-label',t.comment_label); st('send-comment-btn',t.send_comment_btn);
+  st('req-incident-sub',t.req_incident_sub);
+  var ta=document.getElementById('guest-comment'); if(ta&&t.comment_placeholder) ta.placeholder=t.comment_placeholder;
+}
+
+// REQUESTS
+function sendRequest(type){
+  showToast('✓ Request sent');
+  var isUrgent=type.indexOf('URGENT')!==-1||type.indexOf('Problem')!==-1;
+  var subject=isUrgent?encodeURIComponent('⚠️ INCIDENT - Les Terrasses Suites'):encodeURIComponent('📋 Request - Les Terrasses Suites');
+  var body=encodeURIComponent('Request: '+type+'\\n\\nLes Terrasses Suites');
+  window.open('mailto:lesterrassessuites@gmail.com?subject='+subject+'&body='+body,'_blank');
+}
+
+function sendSpecialRequest(type){
+  var modal=document.getElementById('special-request-modal');
+  var t=TRANSLATIONS['en'];
+  var lb=document.querySelector('.lang-btn.active');
+  if(lb){ var l=lb.textContent.toLowerCase(); if(TRANSLATIONS[l]) t=TRANSLATIONS[l]; }
+  var titleEl=document.getElementById('sr-modal-title');
+  var textEl=document.getElementById('sr-modal-text');
+  if(type==='late'){
+    if(titleEl) titleEl.textContent=t.late_modal_title||'⏰ Late Check-out';
+    if(textEl) textEl.innerHTML=t.late_modal_text||'';
+  }else{
+    if(titleEl) titleEl.textContent=t.early_modal_title||'🌅 Early Check-in';
+    if(textEl) textEl.innerHTML=t.early_modal_text||'';
+  }
+  if(modal) modal.style.display='flex';
+}
+
+function showIncidentModal(){
+  var modal=document.getElementById('incident-modal');
+  if(modal) modal.style.display='flex';
+}
+
+function showSheetInfo(){
+  var modal=document.getElementById('sheet-modal');
+  if(modal) modal.style.display='flex';
+}
+
+function showCleaningInfo(){
+  var modal=document.getElementById('cleaning-modal');
+  if(modal) modal.style.display='flex';
+}
+
+function closeModal(id){
+  var modal=document.getElementById(id);
+  if(modal) modal.style.display='none';
+}
+
+function requestSheetChange(type){
+  closeModal('sheet-modal');
+  var subjects={weekly:encodeURIComponent('🛏️ Weekly sheet change - Les Terrasses'),accident:encodeURIComponent('🚿 Urgent sheet change - Les Terrasses')};
+  var bodies={weekly:encodeURIComponent('Dear Gabriel,\\n\\nI would like to request the weekly sheet change.\\n\\nThank you,\\nLes Terrasses Suites'),accident:encodeURIComponent('Dear Gabriel,\\n\\nI need an urgent sheet change. There has been a small accident.\\n\\nThank you for your understanding,\\nLes Terrasses Suites')};
+  window.open('mailto:lesterrassessuites@gmail.com?subject='+subjects[type]+'&body='+bodies[type],'_blank');
+  showToast('✓ Request sent');
+}
+
+function requestCleaning(type){
+  closeModal('cleaning-modal');
+  var subjects={basic:encodeURIComponent('🧹 Basic clean - Les Terrasses'),full:encodeURIComponent('🧽 Full cleaning - Les Terrasses')};
+  var bodies={basic:encodeURIComponent('Dear Gabriel,\\n\\nI would like to request a basic room clean.\\n\\nThank you'),full:encodeURIComponent('Dear Gabriel,\\n\\nI would like to request a full room cleaning. I understand this has a €25 supplement.\\n\\nThank you')};
+  window.open('mailto:lesterrassessuites@gmail.com?subject='+subjects[type]+'&body='+bodies[type],'_blank');
+  showToast('✓ Request sent');
+}
+
+// RATING
+function selectRating(n){
+  document.querySelectorAll('.star-btn').forEach(function(b,i){ b.classList.toggle('selected',i<n); });
+  setTimeout(function(){
+    document.getElementById('checkout-form').style.display='none';
+    document.getElementById('checkout-success').style.display='block';
+    if(n<=3) sendRequest('⭐ Low rating: '+n+'/5 — please contact guest');
+  },800);
+}
+
+function submitComment(){
+  var comment=document.getElementById('guest-comment').value.trim();
+  if(!comment){ showToast('Please write a comment'); return; }
+  var subject=encodeURIComponent('💬 Guest comment - Les Terrasses Suites');
+  var body=encodeURIComponent('Guest comment:\\n\\n'+comment+'\\n\\nLes Terrasses Suites');
+  window.open('mailto:lesterrassessuites@gmail.com?subject='+subject+'&body='+body,'_blank');
+  showToast('✓ Comment sent. Thank you!');
+  document.getElementById('guest-comment').value='';
+}
+
+function openReview(p){ showToast('Opening '+p+'...'); }
+
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); },3500);
+}
+</script>
+</body>
+</html>
