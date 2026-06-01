@@ -1996,7 +1996,12 @@ function parseCSVData(csv){
   var targetCol = suiteColMap[suite] || 6;
   
   var lines = csv.split('\n');
-  console.log('CSV:', lines.length, 'lines, checking suite col:', targetCol);
+  console.log('CSV:', lines.length, 'lines, checking suite col:', targetCol, 'suite:', suite);
+  // Log first few rows suite column values
+  for(var d=1; d<=5 && d<lines.length; d++){
+    var dr=parseCSVLine(lines[d]);
+    if(dr.length>9) console.log('Row',d,'name:',dr[1],'col6:',dr[6],'col7:',dr[7],'col8:',dr[8],'col9:',dr[9]);
+  }
   
   for(var r=1; r<lines.length; r++){
     var line = lines[r].trim();
