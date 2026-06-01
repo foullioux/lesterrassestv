@@ -1896,9 +1896,10 @@ function loadGuestFromSheets(){
   var currentMonth = monthsES[today.getMonth()];
   var nextMonth = monthsES[(today.getMonth()+1) % 12];
   
+  var prevMonth = monthsES[(today.getMonth()-1+12) % 12];
   var sheetsToTry = [
-    currentMonth, nextMonth,
-    monthsESlow[today.getMonth()], monthsESlow[(today.getMonth()+1) % 12],
+    currentMonth, prevMonth, nextMonth,
+    monthsESlow[today.getMonth()], monthsESlow[(today.getMonth()-1+12) % 12],
     monthsPT[today.getMonth()],
     monthsEN[today.getMonth()],
     today.getMonth()+1,
@@ -1938,7 +1939,7 @@ function tryLoadSheet(sheets, idx){
   };
   
   var cacheBust = Date.now();
-  var gid = GID_MAP[sheetName.toUpperCase()];
+  var gid = GID_MAP[sheetName.toUpperCase()] || GID_MAP[sheetName.toUpperCase().replace('Ó','O').replace('É','E')];
   var url;
   if(gid){
     url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + 
