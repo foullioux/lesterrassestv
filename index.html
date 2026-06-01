@@ -1898,12 +1898,9 @@ function loadGuestFromSheets(){
   
   var prevMonth = monthsES[(today.getMonth()-1+12) % 12];
   var sheetsToTry = [
-    currentMonth, prevMonth, nextMonth,
-    monthsESlow[today.getMonth()], monthsESlow[(today.getMonth()-1+12) % 12],
-    monthsPT[today.getMonth()],
-    monthsEN[today.getMonth()],
-    today.getMonth()+1,
-    String(today.getMonth()+1).padStart(2,'0')
+    currentMonth,
+    prevMonth,
+    nextMonth
   ];
   
   console.log('Today:', today.toDateString(), 'Suite:', SUITE_NUMBER);
