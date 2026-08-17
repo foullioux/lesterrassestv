@@ -19,8 +19,7 @@
           "samples": [
             "ask claudia {query}",
             "tell claudia {query}",
-            "claudia {query}",
-            "{query}"
+            "claudia {query}"
           ]
         }
       ],
