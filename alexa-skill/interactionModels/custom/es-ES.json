@@ -1,0 +1,31 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "asistente claude",
+      "intents": [
+        { "name": "AMAZON.CancelIntent", "samples": [] },
+        { "name": "AMAZON.HelpIntent", "samples": [] },
+        { "name": "AMAZON.StopIntent", "samples": [] },
+        { "name": "AMAZON.NavigateHomeIntent", "samples": [] },
+        { "name": "AMAZON.FallbackIntent", "samples": [] },
+        {
+          "name": "AskClaudeIntent",
+          "slots": [
+            {
+              "name": "query",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "pregunta a claude {query}",
+            "preguntale a claude {query}",
+            "dile a claude que {query}",
+            "claude {query}",
+            "{query}"
+          ]
+        }
+      ],
+      "types": []
+    }
+  }
+}
