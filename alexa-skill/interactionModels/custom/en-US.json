@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "claude assistant",
+      "invocationName": "claudia",
       "intents": [
         { "name": "AMAZON.CancelIntent", "samples": [] },
         { "name": "AMAZON.HelpIntent", "samples": [] },
@@ -17,9 +17,9 @@
             }
           ],
           "samples": [
-            "ask claude {query}",
-            "tell claude {query}",
-            "claude {query}",
+            "ask claudia {query}",
+            "tell claudia {query}",
+            "claudia {query}",
             "{query}"
           ]
         }

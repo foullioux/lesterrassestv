@@ -1,7 +1,7 @@
 # Claude por voz en Alexa
 
 Esto te permite hablar con Claude en tu Echo (o cualquier dispositivo Alexa) diciendo, por
-ejemplo: **"Alexa, abre asistente Claude"** y luego **"pregunta a Claude cuál es la capital de
+ejemplo: **"Alexa, abre Claudia"** y luego **"pregunta a Claudia cuál es la capital de
 Francia"**.
 
 Todo el código ya está listo en este repositorio (`alexa-skill/`). Lo que falta son pasos que
@@ -56,7 +56,7 @@ que usas en tu Echo, aparece automáticamente disponible en tus dispositivos en 
 ## 5. Crea la skill en Alexa Developer Console
 
 1. En https://developer.amazon.com/alexa/console/ask, pulsa **Create Skill**.
-2. Nombre: `Claude`. Idioma por defecto: **Español (ES)**.
+2. Nombre: `Claudia`. Idioma por defecto: **Español (ES)**.
 3. Tipo de modelo: **Custom**. Método de alojamiento: **Provision your own**. Crea la skill.
 4. En el menú izquierdo, entra en **Interaction Model → JSON Editor**.
 5. Borra el contenido y pega el de
@@ -80,11 +80,11 @@ que usas en tu Echo, aparece automáticamente disponible en tus dispositivos en 
 
 1. En Alexa Developer Console, ve a la pestaña **Test** y activa "Development" (arriba a la
    derecha).
-2. Escribe o di: `abre asistente claude`, y luego: `pregunta a claude cuál es la capital de
+2. Escribe o di: `abre claudia`, y luego: `pregunta a claudia cuál es la capital de
    Francia`.
 3. Si todo va bien, verás/oirás la respuesta de Claude.
 4. Como usaste la misma cuenta de Amazon que en tu Echo, ya puedes probarlo directamente en tu
-   dispositivo físico diciendo: **"Alexa, abre asistente Claude"**.
+   dispositivo físico diciendo: **"Alexa, abre Claudia"**.
 
 ---
 
@@ -93,9 +93,11 @@ que usas en tu Echo, aparece automáticamente disponible en tus dispositivos en 
 - **Conversación con memoria**: la skill recuerda el hilo de la conversación mientras la sesión de
   Alexa siga abierta (unos segundos de silencio la cierran). Cada respuesta termina preguntando
   "¿algo más?" para mantener la sesión activa.
-- **Cambiar el nombre de invocación**: puedes cambiar `"asistente claude"` en el JSON del modelo
-  de interacción por lo que prefieras (p. ej. `"pregunta a claude"`), siempre que cumpla las
-  reglas de Amazon (2+ palabras si no es un nombre ya aprobado).
+- **Nombre de invocación de una sola palabra**: `"claudia"` es una sola palabra. Amazon exige 2+
+  palabras solo para **publicar** una skill en la tienda; para uso privado en tu propia cuenta
+  (que es este caso) funciona sin problema. Si al hacer **Build Model** te avisa de esto, es solo
+  un aviso informativo, no bloquea el uso en modo desarrollo. Puedes cambiarlo editando
+  `"invocationName"` en el JSON del modelo de interacción.
 - **Coste**: solo pagas lo que consumas de la API de Claude (por token) y, en la práctica, nada de
   AWS Lambda (capa gratuita). Puedes ver tu consumo en https://console.anthropic.com/settings/usage.
 - **Inglés**: si prefieres usarlo en inglés, usa
