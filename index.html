@@ -285,7 +285,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Jost',sans-serif;f
     <div class="divider"><span>Pool</span></div>
     <div class="info-block">
       <div id="pool-label" class="info-label">Hours · Rules</div>
-      <div id="pool-text" style="font-size:14px;line-height:1.9;color:var(--dark);">🕘 &nbsp;Open from <strong>9:00 AM to 9:00 PM</strong><br>🚶 &nbsp;Access via stairs only<br>🏃 &nbsp;No running around the pool<br>🤸 &nbsp;No diving or jumping</div>
+      <div id="pool-text" style="font-size:14px;line-height:1.9;color:var(--dark);">🕗 &nbsp;Open from <strong>8:00 AM to 8:00 PM</strong><br>🚫 &nbsp;<strong>No alcohol</strong> in the pool area<br>🍾 &nbsp;No glass (bottles, glasses)<br>🚶 &nbsp;Access via stairs only<br>🏃 &nbsp;No running around the pool<br>🤸 &nbsp;No diving or jumping<br>⚠️ &nbsp;No lifeguard on duty · swim at your own risk</div>
     </div>
     <div class="info-block" style="border-left-color:#888;cursor:pointer;" onclick="sendRequest('Pool towels')">
       <div id="pool-towels-label" class="info-label">🏊 Pool towels</div>
@@ -340,7 +340,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Jost',sans-serif;f
     <button class="req-btn" onclick="sendRequest('Extra blanket')"><span class="req-icon">🧣</span><span id="req-blanket" class="req-title">Extra blanket</span></button>
     <button class="req-btn" onclick="sendRequest('Rubbish collection — leaving at room entrance')"><span class="req-icon">🗑️</span><span id="req-trash" class="req-title">Rubbish collection</span></button>
     <button class="req-btn" onclick="showSheetInfo()"><span class="req-icon">🛏️</span><span id="req-sheets" class="req-title">Sheet change</span><span id="req-sheets-sub" style="display:block;font-size:10px;color:var(--mid);margin-top:4px;">Once a week · Accident: let us know</span></button>
-    <button class="req-btn" onclick="showCleaningInfo()"><span class="req-icon">🧹</span><span id="req-clean" class="req-title">Room cleaning</span><span id="req-clean-sub" style="display:block;font-size:10px;color:var(--mid);margin-top:4px;">Full cleaning: +€25</span></button>
+    <button class="req-btn" onclick="showCleaningInfo()"><span class="req-icon">🧹</span><span id="req-clean" class="req-title">Room cleaning</span><span id="req-clean-sub" style="display:block;font-size:10px;color:var(--mid);margin-top:4px;">Full cleaning: ask for availability via WhatsApp</span></button>
     <button class="req-btn" onclick="sendSpecialRequest('late')"><span class="req-icon">⏰</span><span id="req-late" class="req-title">Late check-out</span><span id="req-late-sub" style="display:block;font-size:10px;color:var(--mid);margin-top:4px;">Subject to availability</span></button>
     <button class="req-btn" onclick="sendSpecialRequest('early')"><span class="req-icon">🌅</span><span id="req-early" class="req-title">Early check-in</span><span id="req-early-sub" style="display:block;font-size:10px;color:var(--mid);margin-top:4px;">Subject to availability</span></button>
     <button class="req-btn" onclick="showIncidentModal()" style="border-color:rgba(180,60,60,0.3);"><span class="req-icon">⚠️</span><span id="req-incident" class="req-title">Incident / Problem</span><span id="req-incident-sub" style="display:block;font-size:10px;color:#c0392b;margin-top:4px;">WhatsApp · Direct call</span></button>
@@ -821,11 +821,11 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Jost',sans-serif;f
 <div id="cleaning-modal" class="modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('cleaning-modal')">✕</button>
-    <div class="modal-title">🧹 Room cleaning</div>
-    <div class="modal-text">🔒 &nbsp;Our team <strong>never enters your room without notifying you first</strong>. Your privacy is our priority.<br><br>🧹 &nbsp;Request a <strong>basic clean</strong> — tidying, mopping — anytime with confidence.<br><br>🧽 &nbsp;<strong>Full cleaning</strong> has a supplement of <strong>€25</strong>. We will notify you before proceeding.</div>
+    <div class="modal-title" id="clean-modal-title">🧹 Room cleaning</div>
+    <div class="modal-text" id="clean-modal-text">🔒 &nbsp;Our team <strong>never enters your room without notifying you first</strong>. Your privacy is our priority.<br><br>🧹 &nbsp;Request a <strong>basic clean</strong> — tidying, mopping — anytime with confidence.<br><br>🧽 &nbsp;<strong>Full cleaning</strong> is available on request — <strong>message us on WhatsApp</strong> to check availability.</div>
     <div class="modal-btns">
-      <button class="modal-btn" style="background:var(--olive);" onclick="requestCleaning('basic')">🧹 Basic clean</button>
-      <button class="modal-btn" style="background:var(--black);" onclick="requestCleaning('full')">🧽 Full cleaning +€25</button>
+      <button class="modal-btn" style="background:var(--olive);" onclick="requestCleaning('basic')" id="clean-btn-basic">🧹 Basic clean</button>
+      <button class="modal-btn" style="background:var(--black);" onclick="requestCleaning('full')" id="clean-btn-full">🧽 Full cleaning · check availability</button>
     </div>
   </div>
 </div>
@@ -894,7 +894,7 @@ const TRANSLATIONS = {
     "stone_quote": "Cada piedra cuenta 10.000 años de historia volcánica",
     "stone_text": "Las paredes del baño de su suite están revestidas con piedra basáltica natural extraída de las entrañas de Madeira. No es decoración — es la isla misma habitando su cuarto de baño.<br><br>🌋 &nbsp;Esta piedra <strong>respira</strong>. Es volcánica, viva, y como todo ser vivo, tiene su propio aroma: mineral, fresco, profundo. Ese tenue olor a tierra húmeda que quizás perciba no es un defecto — es la <strong>firma de la naturaleza</strong>.<br><br>✅ &nbsp;La piedra está <strong>tratada profesionalmente</strong>, libre de hongos y perfectamente sellada.<br><br>🏆 &nbsp;Muy pocos alojamientos del mundo pueden ofrecer esta autenticidad. En Les Terrasses, no dormirá <em>en</em> Madeira — dormirá <em>dentro</em> de Madeira.",
     "pool_label": "Horario · Normas",
-    "pool_text": "🕘 &nbsp;Abierta de <strong>09:00h a 21:00h</strong><br>🚶 &nbsp;Acceso únicamente por las escaleras<br>🏃 &nbsp;Prohibido correr en el área de piscina<br>🤸 &nbsp;Prohibido tirarse al agua",
+    "pool_text": "🕗 &nbsp;Abierta de <strong>08:00h a 20:00h</strong><br>🚫 &nbsp;<strong>Prohibido el alcohol</strong> en la zona de piscina<br>🍾 &nbsp;Prohibido el vidrio (botellas, copas)<br>🚶 &nbsp;Acceso únicamente por las escaleras<br>🏃 &nbsp;Prohibido correr en el área de piscina<br>🤸 &nbsp;Prohibido tirarse al agua<br>⚠️ &nbsp;Piscina sin vigilancia · uso bajo su propia responsabilidad",
     "pool_towels_label": "🏊 Toallas de piscina",
     "pool_towels_val": "Toque aquí para solicitar toallas de piscina",
     "pool_towels_note": "Se enviará una solicitud por WhatsApp · Respuesta en menos de 15 min",
@@ -919,7 +919,7 @@ const TRANSLATIONS = {
     "req_early": "Early check-in",
     "req_early_sub": "Sujeto a disponibilidad",
     "req_incident": "Incidencia / Problema",
-    "req_footer": "Su solicitud se enviará por email. Tiempo de respuesta: menos de 15 minutos.",
+    "req_footer": "Contáctenos por WhatsApp. Tiempo de respuesta: menos de 15 minutos.",
     "div_lunch": "Dónde comer",
     "div_breakfast": "Para desayunar",
     "div_nature": "Levadas y senderismo",
@@ -963,7 +963,11 @@ const TRANSLATIONS = {
     "comment_placeholder": "Su comentario es muy valioso para nosotros...",
     "send_comment_btn": "Enviar comentario",
     "req_sheets_sub": "1 vez por semana · Accidente: avísenos",
-    "req_clean_sub": "Limpieza integral: +25€",
+    "req_clean_sub": "Limpieza integral: consultar disponibilidad por WhatsApp",
+    "clean_modal_title": "🧹 Limpieza de habitación",
+    "clean_modal_text": "🔒 &nbsp;Nuestro equipo <strong>nunca entra en su habitación sin avisarle antes</strong>. Su privacidad es nuestra prioridad.<br><br>🧹 &nbsp;Puede pedir una <strong>limpieza básica</strong> — ordenar, fregar — cuando quiera.<br><br>🧽 &nbsp;La <strong>limpieza integral</strong> está disponible bajo petición — <strong>escríbanos por WhatsApp</strong> para consultar disponibilidad.",
+    "clean_btn_basic": "🧹 Limpieza básica",
+    "clean_btn_full": "🧽 Limpieza integral · consultar disponibilidad",
     "late_modal_title": "⏰ Late Check-out",
     "late_modal_text": "El late check-out está sujeto a disponibilidad.<br><br>Para solicitarlo contáctenos directamente:<br><br>📲 &nbsp;<strong>WhatsApp / Teléfono</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>Email</strong><br>lesterrassessuites@gmail.com",
     "early_modal_title": "🌅 Early Check-in",
@@ -1056,7 +1060,7 @@ const TRANSLATIONS = {
     "stone_quote": "Cada pedra conta 10.000 anos de história vulcânica",
     "stone_text": "As paredes da casa de banho da sua suite são revestidas com pedra basáltica natural extraída das entranhas da Madeira. Não é decoração — é a ilha a habitar a sua casa de banho.<br><br>🌋 &nbsp;Esta pedra <strong>respira</strong>. É vulcânica, viva, e como todo ser vivo, tem o seu próprio aroma: mineral, fresco, profundo. Esse leve cheiro a terra húmida não é um defeito — é a <strong>assinatura da natureza</strong>.<br><br>✅ &nbsp;A pedra está <strong>tratada profissionalmente</strong>, sem fungos e perfeitamente selada.<br><br>🏆 &nbsp;Muito poucos alojamentos no mundo podem oferecer esta autenticidade. Na Les Terrasses, não dormirá <em>na</em> Madeira — dormirá <em>dentro</em> da Madeira.",
     "pool_label": "Horário · Regras",
-    "pool_text": "🕘 &nbsp;Aberta das <strong>09:00h às 21:00h</strong><br>🚶 &nbsp;Acesso apenas pelas escadas<br>🏃 &nbsp;Proibido correr na área da piscina<br>🤸 &nbsp;Proibido mergulhar",
+    "pool_text": "🕗 &nbsp;Aberta das <strong>08:00h às 20:00h</strong><br>🚫 &nbsp;<strong>Proibido o álcool</strong> na zona da piscina<br>🍾 &nbsp;Proibido vidro (garrafas, copos)<br>🚶 &nbsp;Acesso apenas pelas escadas<br>🏃 &nbsp;Proibido correr na área da piscina<br>🤸 &nbsp;Proibido mergulhar<br>⚠️ &nbsp;Piscina sem vigilância · utilização por conta e risco do utilizador",
     "pool_towels_label": "🏊 Toalhas de piscina",
     "pool_towels_val": "Toque aqui para pedir toalhas de piscina",
     "pool_towels_note": "Será enviado um pedido por WhatsApp · Resposta em menos de 15 min",
@@ -1081,7 +1085,7 @@ const TRANSLATIONS = {
     "req_early": "Early check-in",
     "req_early_sub": "Sujeito a disponibilidade",
     "req_incident": "Incidência / Problema",
-    "req_footer": "O seu pedido será enviado por email. Tempo de resposta: menos de 15 minutos.",
+    "req_footer": "Contacte-nos por WhatsApp. Tempo de resposta: menos de 15 minutos.",
     "div_lunch": "Onde comer",
     "div_breakfast": "Para o pequeno-almoço",
     "div_nature": "Levadas e caminhadas",
@@ -1125,7 +1129,11 @@ const TRANSLATIONS = {
     "comment_placeholder": "O seu comentário é muito valioso para nós...",
     "send_comment_btn": "Enviar comentário",
     "req_sheets_sub": "1 vez por semana · Acidente: avise-nos",
-    "req_clean_sub": "Limpeza integral: +25€",
+    "req_clean_sub": "Limpeza integral: consultar disponibilidade por WhatsApp",
+    "clean_modal_title": "🧹 Limpeza do quarto",
+    "clean_modal_text": "🔒 &nbsp;A nossa equipa <strong>nunca entra no seu quarto sem o avisar primeiro</strong>. A sua privacidade é a nossa prioridade.<br><br>🧹 &nbsp;Pode pedir uma <strong>limpeza básica</strong> — arrumar, lavar o chão — quando quiser.<br><br>🧽 &nbsp;A <strong>limpeza integral</strong> está disponível mediante pedido — <strong>envie-nos mensagem por WhatsApp</strong> para confirmar disponibilidade.",
+    "clean_btn_basic": "🧹 Limpeza básica",
+    "clean_btn_full": "🧽 Limpeza integral · consultar disponibilidade",
     "late_modal_title": "⏰ Late Check-out",
     "late_modal_text": "O late check-out está sujeito a disponibilidade.<br><br>Para o solicitar contacte-nos diretamente:<br><br>📲 &nbsp;<strong>WhatsApp / Telefone</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>Email</strong><br>lesterrassessuites@gmail.com",
     "early_modal_title": "🌅 Early Check-in",
@@ -1218,7 +1226,7 @@ const TRANSLATIONS = {
     "stone_quote": "Every stone holds 10,000 years of volcanic history",
     "stone_text": "The bathroom walls of your suite are clad in natural basaltic stone from the heart of Madeira. This is not decoration — it is the island itself living in your bathroom.<br><br>🌋 &nbsp;This stone <strong>breathes</strong>. It is volcanic, alive, and like all living things it has its own scent: mineral, fresh, deep. That subtle earthy smell you may notice is not a flaw — it is <strong>nature signature</strong>.<br><br>✅ &nbsp;The stone has been <strong>professionally treated</strong>, is mould-free and perfectly sealed.<br><br>🏆 &nbsp;Very few places in the world can offer this authenticity. At Les Terrasses, you will not sleep <em>in</em> Madeira — you will sleep <em>inside</em> Madeira.",
     "pool_label": "Hours · Rules",
-    "pool_text": "🕘 &nbsp;Open from <strong>9:00 AM to 9:00 PM</strong><br>🚶 &nbsp;Access via stairs only<br>🏃 &nbsp;No running around the pool<br>🤸 &nbsp;No diving or jumping",
+    "pool_text": "🕗 &nbsp;Open from <strong>8:00 AM to 8:00 PM</strong><br>🚫 &nbsp;<strong>No alcohol</strong> in the pool area<br>🍾 &nbsp;No glass (bottles, glasses)<br>🚶 &nbsp;Access via stairs only<br>🏃 &nbsp;No running around the pool<br>🤸 &nbsp;No diving or jumping<br>⚠️ &nbsp;No lifeguard on duty · swim at your own risk",
     "pool_towels_label": "🏊 Pool towels",
     "pool_towels_val": "Tap here to request pool towels",
     "pool_towels_note": "A request will be sent via WhatsApp · Response within 15 min",
@@ -1243,7 +1251,7 @@ const TRANSLATIONS = {
     "req_early": "Early check-in",
     "req_early_sub": "Subject to availability",
     "req_incident": "Incident / Problem",
-    "req_footer": "Your request will be sent by email. Response time: under 15 minutes.",
+    "req_footer": "Contact us via WhatsApp. Response time: under 15 minutes.",
     "div_lunch": "Where to Eat",
     "div_breakfast": "Breakfast",
     "div_nature": "Levadas & Hiking",
@@ -1287,7 +1295,11 @@ const TRANSLATIONS = {
     "comment_placeholder": "Your feedback is very valuable to us...",
     "send_comment_btn": "Send comment",
     "req_sheets_sub": "Once a week · Accident: let us know",
-    "req_clean_sub": "Full cleaning: +€25",
+    "req_clean_sub": "Full cleaning: ask for availability via WhatsApp",
+    "clean_modal_title": "🧹 Room cleaning",
+    "clean_modal_text": "🔒 &nbsp;Our team <strong>never enters your room without notifying you first</strong>. Your privacy is our priority.<br><br>🧹 &nbsp;Request a <strong>basic clean</strong> — tidying, mopping — anytime with confidence.<br><br>🧽 &nbsp;<strong>Full cleaning</strong> is available on request — <strong>message us on WhatsApp</strong> to check availability.",
+    "clean_btn_basic": "🧹 Basic clean",
+    "clean_btn_full": "🧽 Full cleaning · check availability",
     "late_modal_title": "⏰ Late Check-out",
     "late_modal_text": "Late check-out is subject to availability.<br><br>To request it, please contact us directly:<br><br>📲 &nbsp;<strong>WhatsApp / Phone</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>Email</strong><br>lesterrassessuites@gmail.com",
     "early_modal_title": "🌅 Early Check-in",
@@ -1380,7 +1392,7 @@ const TRANSLATIONS = {
     "stone_quote": "Jeder Stein trägt 10.000 Jahre Vulkangeschichte in sich",
     "stone_text": "Die Badezimmerwände Ihrer Suite sind mit Basaltstein aus Madeira verkleidet. Es ist keine Dekoration — es ist die Insel selbst.<br><br>🌋 &nbsp;Dieser Stein <strong>atmet</strong>. Er ist vulkanisch, lebendig, und hat seinen eigenen Duft: mineralisch, frisch, tief. Dieser leichte Erdgeruch ist kein Fehler — er ist die <strong>Signatur der Natur</strong>.<br><br>✅ &nbsp;Der Stein wurde <strong>professionell behandelt</strong>, ist schimmelfrei und versiegelt.<br><br>🏆 &nbsp;Bei Les Terrasses schlafen Sie nicht <em>auf</em> Madeira — Sie schlafen <em>in</em> Madeira.",
     "pool_label": "Öffnungszeiten · Regeln",
-    "pool_text": "🕘 &nbsp;Geöffnet von <strong>09:00 bis 21:00 Uhr</strong><br>🚶 &nbsp;Zugang nur über die Treppe<br>🏃 &nbsp;Rennen verboten<br>🤸 &nbsp;Springen ins Wasser verboten",
+    "pool_text": "🕗 &nbsp;Geöffnet von <strong>08:00 bis 20:00 Uhr</strong><br>🚫 &nbsp;<strong>Kein Alkohol</strong> im Poolbereich<br>🍾 &nbsp;Kein Glas (Flaschen, Gläser)<br>🚶 &nbsp;Zugang nur über die Treppe<br>🏃 &nbsp;Rennen verboten<br>🤸 &nbsp;Springen ins Wasser verboten<br>⚠️ &nbsp;Keine Badeaufsicht · Benutzung auf eigene Gefahr",
     "pool_towels_label": "🏊 Poolhandtücher",
     "pool_towels_val": "Tippen um Poolhandtücher anzufordern",
     "pool_towels_note": "Eine Anfrage wird per WhatsApp gesendet · Antwort in weniger als 15 Min.",
@@ -1405,7 +1417,7 @@ const TRANSLATIONS = {
     "req_early": "Früher Check-in",
     "req_early_sub": "Je nach Verfügbarkeit",
     "req_incident": "Vorfall / Problem",
-    "req_footer": "Ihre Anfrage wird per E-Mail gesendet. Reaktionszeit: unter 15 Minuten.",
+    "req_footer": "Kontaktieren Sie uns per WhatsApp. Reaktionszeit: unter 15 Minuten.",
     "div_lunch": "Wo essen",
     "div_breakfast": "Frühstück",
     "div_nature": "Levadas & Wandern",
@@ -1449,7 +1461,11 @@ const TRANSLATIONS = {
     "comment_placeholder": "Ihr Kommentar ist uns sehr wertvoll...",
     "send_comment_btn": "Kommentar senden",
     "req_sheets_sub": "1x pro Woche · Unfall: bitte Bescheid geben",
-    "req_clean_sub": "Grundreinigung: +25€",
+    "req_clean_sub": "Grundreinigung: Verfügbarkeit per WhatsApp anfragen",
+    "clean_modal_title": "🧹 Zimmerreinigung",
+    "clean_modal_text": "🔒 &nbsp;Unser Team <strong>betritt Ihr Zimmer nie ohne vorherige Ankündigung</strong>. Ihre Privatsphäre hat Priorität.<br><br>🧹 &nbsp;Eine <strong>einfache Reinigung</strong> — Aufräumen, Wischen — können Sie jederzeit anfragen.<br><br>🧽 &nbsp;Eine <strong>Grundreinigung</strong> ist auf Anfrage möglich — <strong>schreiben Sie uns per WhatsApp</strong>, um die Verfügbarkeit zu prüfen.",
+    "clean_btn_basic": "🧹 Einfache Reinigung",
+    "clean_btn_full": "🧽 Grundreinigung · Verfügbarkeit anfragen",
     "late_modal_title": "⏰ Später Check-out",
     "late_modal_text": "Später Check-out ist je nach Verfügbarkeit möglich.<br><br>Bitte kontaktieren Sie uns direkt:<br><br>📲 &nbsp;<strong>WhatsApp / Telefon</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>E-Mail</strong><br>lesterrassessuites@gmail.com",
     "early_modal_title": "🌅 Früher Check-in",
@@ -1542,7 +1558,7 @@ const TRANSLATIONS = {
     "stone_quote": "Chaque pierre renferme 10 000 ans de histoire volcanique",
     "stone_text": "Les murs de la salle de bain sont habillés de pierre basaltique naturelle de Madère. Ce nest pas de la décoration — cest ile elle-même.<br><br>🌋 &nbsp;Cette pierre <strong>respire</strong>. Elle est volcanique, vivante. Cette légère odeur de terre nest pas un défaut — cest la <strong>signature de la nature</strong>.<br><br>✅ &nbsp;La pierre a été <strong>traitée professionnellement</strong>, sans moisissures.<br><br>🏆 &nbsp;Chez Les Terrasses, vous dormez <em>dans</em> Madère.",
     "pool_label": "Horaires · Règles",
-    "pool_text": "🕘 &nbsp;Ouverte de <strong>9h00 à 21h00</strong><br>🚶 &nbsp;Accès uniquement par les escaliers<br>🏃 &nbsp;Interdit de courir<br>🤸 &nbsp;Interdit de plonger",
+    "pool_text": "🕗 &nbsp;Ouverte de <strong>8h00 à 20h00</strong><br>🚫 &nbsp;<strong>Alcool interdit</strong> dans l'espace piscine<br>🍾 &nbsp;Verre interdit (bouteilles, verres)<br>🚶 &nbsp;Accès uniquement par les escaliers<br>🏃 &nbsp;Interdit de courir<br>🤸 &nbsp;Interdit de plonger<br>⚠️ &nbsp;Piscine non surveillée · baignade sous votre responsabilité",
     "pool_towels_label": "🏊 Serviettes de piscine",
     "pool_towels_val": "Appuyez ici pour demander des serviettes",
     "pool_towels_note": "Une demande sera envoyée par WhatsApp · Réponse en moins de 15 min",
@@ -1567,7 +1583,7 @@ const TRANSLATIONS = {
     "req_early": "Arrivée anticipée",
     "req_early_sub": "Selon disponibilité",
     "req_incident": "Incident / Problème",
-    "req_footer": "Votre demande sera envoyée par e-mail. Réponse en moins de 15 minutes.",
+    "req_footer": "Contactez-nous via WhatsApp. Réponse en moins de 15 minutes.",
     "div_lunch": "Où manger",
     "div_breakfast": "Petit-déjeuner",
     "div_nature": "Levadas & Randonnée",
@@ -1611,7 +1627,11 @@ const TRANSLATIONS = {
     "comment_placeholder": "Votre commentaire est très précieux pour nous...",
     "send_comment_btn": "Envoyer le commentaire",
     "req_sheets_sub": "1 fois par semaine · Accident: prévenez-nous",
-    "req_clean_sub": "Nettoyage complet: +25€",
+    "req_clean_sub": "Nettoyage complet : disponibilité sur demande via WhatsApp",
+    "clean_modal_title": "🧹 Ménage de la chambre",
+    "clean_modal_text": "🔒 &nbsp;Notre équipe <strong>n'entre jamais dans votre chambre sans vous prévenir</strong>. Votre intimité est notre priorité.<br><br>🧹 &nbsp;Demandez un <strong>ménage simple</strong> — rangement, serpillière — à tout moment.<br><br>🧽 &nbsp;Le <strong>nettoyage complet</strong> est disponible sur demande — <strong>écrivez-nous sur WhatsApp</strong> pour vérifier la disponibilité.",
+    "clean_btn_basic": "🧹 Ménage simple",
+    "clean_btn_full": "🧽 Nettoyage complet · disponibilité",
     "late_modal_title": "⏰ Départ tardif",
     "late_modal_text": "Le départ tardif est soumis à disponibilité.<br><br>Pour le demander, contactez-nous directement:<br><br>📲 &nbsp;<strong>WhatsApp / Téléphone</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>E-mail</strong><br>lesterrassessuites@gmail.com",
     "early_modal_title": "🌅 Arrivée anticipée",
@@ -1704,7 +1724,7 @@ const TRANSLATIONS = {
     "stone_quote": "Elke steen draagt 10.000 jaar vulkanische geschiedenis",
     "stone_text": "De badkamerwanden zijn bekleed met natuurlijke basaltsteen uit Madeira. Dit is geen decoratie — het is het eiland zelf.<br><br>🌋 &nbsp;Deze steen <strong>ademt</strong>. Hij is vulkanisch, levend. Die subtiele aardse geur is geen gebrek — het is de <strong>handtekening van de natuur</strong>.<br><br>✅ &nbsp;De steen is <strong>professioneel behandeld</strong>, schimmelvrij en verzegeld.<br><br>🏆 &nbsp;Bij Les Terrasses slaapt u <em>in</em> Madeira.",
     "pool_label": "Openingstijden · Regels",
-    "pool_text": "🕘 &nbsp;Open van <strong>09:00 tot 21:00 uur</strong><br>🚶 &nbsp;Toegang alleen via de trap<br>🏃 &nbsp;Rennen verboden<br>🤸 &nbsp;Springen verboden",
+    "pool_text": "🕗 &nbsp;Open van <strong>08:00 tot 20:00 uur</strong><br>🚫 &nbsp;<strong>Geen alcohol</strong> bij het zwembad<br>🍾 &nbsp;Geen glas (flessen, glazen)<br>🚶 &nbsp;Toegang alleen via de trap<br>🏃 &nbsp;Rennen verboden<br>🤸 &nbsp;Springen verboden<br>⚠️ &nbsp;Geen toezicht · zwemmen op eigen risico",
     "pool_towels_label": "🏊 Zwembadhanddoeken",
     "pool_towels_val": "Tik hier om zwembadhanddoeken aan te vragen",
     "pool_towels_note": "Er wordt een verzoek via WhatsApp verzonden · Reactie binnen 15 min",
@@ -1729,7 +1749,7 @@ const TRANSLATIONS = {
     "req_early": "Vroeg inchecken",
     "req_early_sub": "Afhankelijk van beschikbaarheid",
     "req_incident": "Incident / Probleem",
-    "req_footer": "Uw verzoek wordt per e-mail verzonden. Reactietijd: minder dan 15 minuten.",
+    "req_footer": "Neem contact op via WhatsApp. Reactietijd: minder dan 15 minuten.",
     "div_lunch": "Waar eten",
     "div_breakfast": "Ontbijt",
     "div_nature": "Levadas & Wandelen",
@@ -1773,7 +1793,11 @@ const TRANSLATIONS = {
     "comment_placeholder": "Uw opmerking is zeer waardevol voor ons...",
     "send_comment_btn": "Opmerking verzenden",
     "req_sheets_sub": "1x per week · Ongeluk: laat het ons weten",
-    "req_clean_sub": "Volledige schoonmaak: +€25",
+    "req_clean_sub": "Volledige schoonmaak: beschikbaarheid via WhatsApp",
+    "clean_modal_title": "🧹 Kamerschoonmaak",
+    "clean_modal_text": "🔒 &nbsp;Ons team <strong>betreedt uw kamer nooit zonder u eerst te informeren</strong>. Uw privacy staat voorop.<br><br>🧹 &nbsp;Vraag gerust een <strong>basisschoonmaak</strong> aan — opruimen, dweilen — wanneer u wilt.<br><br>🧽 &nbsp;Een <strong>volledige schoonmaak</strong> is op aanvraag mogelijk — <strong>stuur ons een WhatsApp</strong> om de beschikbaarheid te checken.",
+    "clean_btn_basic": "🧹 Basisschoonmaak",
+    "clean_btn_full": "🧽 Volledige schoonmaak · beschikbaarheid",
     "late_modal_title": "⏰ Laat uitchecken",
     "late_modal_text": "Laat uitchecken is afhankelijk van beschikbaarheid.<br><br>Neem direct contact met ons op:<br><br>📲 &nbsp;<strong>WhatsApp / Telefoon</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>E-mail</strong><br>lesterrassessuites@gmail.com",
     "early_modal_title": "🌅 Vroeg inchecken",
@@ -2204,6 +2228,8 @@ function setLang(l,btn){
   st('req-early',t.req_early); st('req-early-sub',t.req_early_sub);
   st('req-incident',t.req_incident); st('req-incident-sub',t.req_incident_sub);
   st('req-footer',t.req_footer);
+  st('clean-modal-title',t.clean_modal_title); sh('clean-modal-text',t.clean_modal_text);
+  st('clean-btn-basic',t.clean_btn_basic); st('clean-btn-full',t.clean_btn_full);
   st('div-services',t.div_services); st('div-lunch',t.div_lunch);
   st('div-breakfast',t.div_breakfast); st('div-nature',t.div_nature);
   st('div-bars',t.div_bars);
@@ -2294,11 +2320,11 @@ function _OLD_requestSheetChange(type){
 
 function requestCleaning(type){
   closeModal('cleaning-modal');
-  showContactModal(type === 'basic' ? '🧹 Basic room clean' : '🧽 Full cleaning +€25');
+  showContactModal(type === 'basic' ? '🧹 Basic room clean' : '🧽 Full cleaning · check availability');
 }
 function _OLD_requestCleaning(type){
   var subjects={basic:encodeURIComponent('🧹 Basic clean - Les Terrasses'),full:encodeURIComponent('🧽 Full cleaning - Les Terrasses')};
-  var bodies={basic:encodeURIComponent('Dear Gabriel,\\n\\nI would like to request a basic room clean.\\n\\nThank you'),full:encodeURIComponent('Dear Gabriel,\\n\\nI would like to request a full room cleaning. I understand this has a €25 supplement.\\n\\nThank you')};
+  var bodies={basic:encodeURIComponent('Dear Gabriel,\\n\\nI would like to request a basic room clean.\\n\\nThank you'),full:encodeURIComponent('Dear Gabriel,\\n\\nI would like to request a full room cleaning. Could you let me know your availability?\\n\\nThank you')};
   window.open('mailto:lesterrassessuites@gmail.com?subject='+subjects[type]+'&body='+bodies[type],'_blank');
   showToast('✓ Request sent');
 }
@@ -2360,5 +2386,9 @@ function showToast(msg){
     <button onclick="closeContactModal()" style="width:100%;margin-top:24px;background:var(--olive);color:white;border:none;padding:14px;font-family:Jost,sans-serif;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;cursor:pointer;" id="contact-modal-close-btn">Close</button>
   </div>
 </div>
+<script>
+// Move all modals to <body> so they display from any screen
+document.querySelectorAll('.modal').forEach(function(m){ document.body.appendChild(m); });
+</script>
 </body>
 </html>
