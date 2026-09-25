@@ -358,7 +358,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Jost',sans-serif;f
     <button class="req-btn" onclick="sendRequest('Extra blanket')"><span class="req-icon">🧣</span><span id="req-blanket" class="req-title">Extra blanket</span></button>
     <button class="req-btn" onclick="sendRequest('Rubbish collection — leaving at room entrance')"><span class="req-icon">🗑️</span><span id="req-trash" class="req-title">Rubbish collection</span></button>
     <button class="req-btn" onclick="showSheetInfo()"><span class="req-icon">🛏️</span><span id="req-sheets" class="req-title">Sheet change</span><span id="req-sheets-sub" style="display:block;font-size:10px;color:var(--mid);margin-top:4px;">Once a week · Accident: let us know</span></button>
-    <button class="req-btn" onclick="showCleaningInfo()"><span class="req-icon">🧹</span><span id="req-clean" class="req-title">Room cleaning</span><span id="req-clean-sub" style="display:block;font-size:10px;color:var(--mid);margin-top:4px;">Full cleaning: ask for availability via WhatsApp</span></button>
+    <button class="req-btn" onclick="showCleaningInfo()"><span class="req-icon">🧹</span><span id="req-clean" class="req-title">Room cleaning</span><span id="req-clean-sub" style="display:block;font-size:10px;color:var(--mid);margin-top:4px;">Basic: €10 · Full: free for stays of more than a week</span></button>
     <button class="req-btn" onclick="sendSpecialRequest('late')"><span class="req-icon">⏰</span><span id="req-late" class="req-title">Late check-out</span><span id="req-late-sub" style="display:block;font-size:10px;color:var(--mid);margin-top:4px;">Subject to availability</span></button>
     <button class="req-btn" onclick="sendSpecialRequest('early')"><span class="req-icon">🌅</span><span id="req-early" class="req-title">Early check-in</span><span id="req-early-sub" style="display:block;font-size:10px;color:var(--mid);margin-top:4px;">Subject to availability</span></button>
     <button class="req-btn" onclick="showIncidentModal()" style="border-color:rgba(180,60,60,0.3);"><span class="req-icon">⚠️</span><span id="req-incident" class="req-title">Incident / Problem</span><span id="req-incident-sub" style="display:block;font-size:10px;color:#c0392b;margin-top:4px;">WhatsApp · Direct call</span></button>
@@ -840,10 +840,10 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Jost',sans-serif;f
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('cleaning-modal')">✕</button>
     <div class="modal-title" id="clean-modal-title">🧹 Room cleaning</div>
-    <div class="modal-text" id="clean-modal-text">🔒 &nbsp;Our team <strong>never enters your room without notifying you first</strong>. Your privacy is our priority.<br><br>🧹 &nbsp;Request a <strong>basic clean</strong> — tidying, mopping — anytime with confidence.<br><br>🧽 &nbsp;<strong>Full cleaning</strong> is available on request — <strong>message us on WhatsApp</strong> to check availability.</div>
+    <div class="modal-text" id="clean-modal-text">🔒 &nbsp;Our team <strong>never enters your room without notifying you first</strong>. Your privacy is our priority.<br><br>🧹 &nbsp;<strong>Basic clean</strong> — tidying, mopping — for <strong>€10</strong>, subject to availability.<br><br>🧽 &nbsp;<strong>Full cleaning is free for stays of more than a week</strong>. For shorter stays, <strong>message us on WhatsApp</strong> to check availability.</div>
     <div class="modal-btns">
-      <button class="modal-btn" style="background:var(--olive);" onclick="requestCleaning('basic')" id="clean-btn-basic">🧹 Basic clean</button>
-      <button class="modal-btn" style="background:var(--black);" onclick="requestCleaning('full')" id="clean-btn-full">🧽 Full cleaning · check availability</button>
+      <button class="modal-btn" style="background:var(--olive);" onclick="requestCleaning('basic')" id="clean-btn-basic">🧹 Basic clean · €10</button>
+      <button class="modal-btn" style="background:var(--black);" onclick="requestCleaning('full')" id="clean-btn-full">🧽 Full cleaning</button>
     </div>
   </div>
 </div>
@@ -984,11 +984,11 @@ const TRANSLATIONS = {
     "comment_placeholder": "Su comentario es muy valioso para nosotros...",
     "send_comment_btn": "Enviar comentario",
     "req_sheets_sub": "1 vez por semana · Accidente: avísenos",
-    "req_clean_sub": "Limpieza integral: consultar disponibilidad por WhatsApp",
+    "req_clean_sub": "Básica: 10€ · Integral: gratis en estancias de más de una semana",
     "clean_modal_title": "🧹 Limpieza de habitación",
-    "clean_modal_text": "🔒 &nbsp;Nuestro equipo <strong>nunca entra en su habitación sin avisarle antes</strong>. Su privacidad es nuestra prioridad.<br><br>🧹 &nbsp;Puede pedir una <strong>limpieza básica</strong> — ordenar, fregar — cuando quiera.<br><br>🧽 &nbsp;La <strong>limpieza integral</strong> está disponible bajo petición — <strong>escríbanos por WhatsApp</strong> para consultar disponibilidad.",
-    "clean_btn_basic": "🧹 Limpieza básica",
-    "clean_btn_full": "🧽 Limpieza integral · consultar disponibilidad",
+    "clean_modal_text": "🔒 &nbsp;Nuestro equipo <strong>nunca entra en su habitación sin avisarle antes</strong>. Su privacidad es nuestra prioridad.<br><br>🧹 &nbsp;<strong>Limpieza básica</strong> — ordenar, fregar — por <strong>10€</strong>, sujeta a disponibilidad.<br><br>🧽 &nbsp;La <strong>limpieza integral es gratuita en estancias de más de una semana</strong>. Para estancias más cortas, <strong>escríbanos por WhatsApp</strong> para consultar disponibilidad.",
+    "clean_btn_basic": "🧹 Limpieza básica · 10€",
+    "clean_btn_full": "🧽 Limpieza integral",
     "late_modal_title": "⏰ Late Check-out",
     "late_modal_text": "El late check-out está sujeto a disponibilidad.<br><br>Para solicitarlo contáctenos directamente:<br><br>📲 &nbsp;<strong>WhatsApp / Teléfono</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>Email</strong><br>lesterrassessuites@gmail.com",
     "early_modal_title": "🌅 Early Check-in",
@@ -1156,11 +1156,11 @@ const TRANSLATIONS = {
     "comment_placeholder": "O seu comentário é muito valioso para nós...",
     "send_comment_btn": "Enviar comentário",
     "req_sheets_sub": "1 vez por semana · Acidente: avise-nos",
-    "req_clean_sub": "Limpeza integral: consultar disponibilidade por WhatsApp",
+    "req_clean_sub": "Básica: 10€ · Integral: gratuita em estadias de mais de uma semana",
     "clean_modal_title": "🧹 Limpeza do quarto",
-    "clean_modal_text": "🔒 &nbsp;A nossa equipa <strong>nunca entra no seu quarto sem o avisar primeiro</strong>. A sua privacidade é a nossa prioridade.<br><br>🧹 &nbsp;Pode pedir uma <strong>limpeza básica</strong> — arrumar, lavar o chão — quando quiser.<br><br>🧽 &nbsp;A <strong>limpeza integral</strong> está disponível mediante pedido — <strong>envie-nos mensagem por WhatsApp</strong> para confirmar disponibilidade.",
-    "clean_btn_basic": "🧹 Limpeza básica",
-    "clean_btn_full": "🧽 Limpeza integral · consultar disponibilidade",
+    "clean_modal_text": "🔒 &nbsp;A nossa equipa <strong>nunca entra no seu quarto sem o avisar primeiro</strong>. A sua privacidade é a nossa prioridade.<br><br>🧹 &nbsp;<strong>Limpeza básica</strong> — arrumar, lavar o chão — por <strong>10€</strong>, sujeita a disponibilidade.<br><br>🧽 &nbsp;A <strong>limpeza integral é gratuita em estadias de mais de uma semana</strong>. Para estadias mais curtas, <strong>envie-nos mensagem por WhatsApp</strong> para confirmar disponibilidade.",
+    "clean_btn_basic": "🧹 Limpeza básica · 10€",
+    "clean_btn_full": "🧽 Limpeza integral",
     "late_modal_title": "⏰ Late Check-out",
     "late_modal_text": "O late check-out está sujeito a disponibilidade.<br><br>Para o solicitar contacte-nos diretamente:<br><br>📲 &nbsp;<strong>WhatsApp / Telefone</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>Email</strong><br>lesterrassessuites@gmail.com",
     "early_modal_title": "🌅 Early Check-in",
@@ -1328,11 +1328,11 @@ const TRANSLATIONS = {
     "comment_placeholder": "Your feedback is very valuable to us...",
     "send_comment_btn": "Send comment",
     "req_sheets_sub": "Once a week · Accident: let us know",
-    "req_clean_sub": "Full cleaning: ask for availability via WhatsApp",
+    "req_clean_sub": "Basic: €10 · Full: free for stays of more than a week",
     "clean_modal_title": "🧹 Room cleaning",
-    "clean_modal_text": "🔒 &nbsp;Our team <strong>never enters your room without notifying you first</strong>. Your privacy is our priority.<br><br>🧹 &nbsp;Request a <strong>basic clean</strong> — tidying, mopping — anytime with confidence.<br><br>🧽 &nbsp;<strong>Full cleaning</strong> is available on request — <strong>message us on WhatsApp</strong> to check availability.",
-    "clean_btn_basic": "🧹 Basic clean",
-    "clean_btn_full": "🧽 Full cleaning · check availability",
+    "clean_modal_text": "🔒 &nbsp;Our team <strong>never enters your room without notifying you first</strong>. Your privacy is our priority.<br><br>🧹 &nbsp;<strong>Basic clean</strong> — tidying, mopping — for <strong>€10</strong>, subject to availability.<br><br>🧽 &nbsp;<strong>Full cleaning is free for stays of more than a week</strong>. For shorter stays, <strong>message us on WhatsApp</strong> to check availability.",
+    "clean_btn_basic": "🧹 Basic clean · €10",
+    "clean_btn_full": "🧽 Full cleaning",
     "late_modal_title": "⏰ Late Check-out",
     "late_modal_text": "Late check-out is subject to availability.<br><br>To request it, please contact us directly:<br><br>📲 &nbsp;<strong>WhatsApp / Phone</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>Email</strong><br>lesterrassessuites@gmail.com",
     "early_modal_title": "🌅 Early Check-in",
@@ -1500,11 +1500,11 @@ const TRANSLATIONS = {
     "comment_placeholder": "Ihr Kommentar ist uns sehr wertvoll...",
     "send_comment_btn": "Kommentar senden",
     "req_sheets_sub": "1x pro Woche · Unfall: bitte Bescheid geben",
-    "req_clean_sub": "Grundreinigung: Verfügbarkeit per WhatsApp anfragen",
+    "req_clean_sub": "Einfach: 10 € · Grundreinigung: kostenlos ab über einer Woche",
     "clean_modal_title": "🧹 Zimmerreinigung",
-    "clean_modal_text": "🔒 &nbsp;Unser Team <strong>betritt Ihr Zimmer nie ohne vorherige Ankündigung</strong>. Ihre Privatsphäre hat Priorität.<br><br>🧹 &nbsp;Eine <strong>einfache Reinigung</strong> — Aufräumen, Wischen — können Sie jederzeit anfragen.<br><br>🧽 &nbsp;Eine <strong>Grundreinigung</strong> ist auf Anfrage möglich — <strong>schreiben Sie uns per WhatsApp</strong>, um die Verfügbarkeit zu prüfen.",
-    "clean_btn_basic": "🧹 Einfache Reinigung",
-    "clean_btn_full": "🧽 Grundreinigung · Verfügbarkeit anfragen",
+    "clean_modal_text": "🔒 &nbsp;Unser Team <strong>betritt Ihr Zimmer nie ohne vorherige Ankündigung</strong>. Ihre Privatsphäre hat Priorität.<br><br>🧹 &nbsp;<strong>Einfache Reinigung</strong> — Aufräumen, Wischen — für <strong>10 €</strong>, je nach Verfügbarkeit.<br><br>🧽 &nbsp;Die <strong>Grundreinigung ist bei Aufenthalten über einer Woche kostenlos</strong>. Bei kürzeren Aufenthalten <strong>schreiben Sie uns per WhatsApp</strong>, um die Verfügbarkeit zu prüfen.",
+    "clean_btn_basic": "🧹 Einfache Reinigung · 10 €",
+    "clean_btn_full": "🧽 Grundreinigung",
     "late_modal_title": "⏰ Später Check-out",
     "late_modal_text": "Später Check-out ist je nach Verfügbarkeit möglich.<br><br>Bitte kontaktieren Sie uns direkt:<br><br>📲 &nbsp;<strong>WhatsApp / Telefon</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>E-Mail</strong><br>lesterrassessuites@gmail.com",
     "early_modal_title": "🌅 Früher Check-in",
@@ -1672,11 +1672,11 @@ const TRANSLATIONS = {
     "comment_placeholder": "Votre commentaire est très précieux pour nous...",
     "send_comment_btn": "Envoyer le commentaire",
     "req_sheets_sub": "1 fois par semaine · Accident: prévenez-nous",
-    "req_clean_sub": "Nettoyage complet : disponibilité sur demande via WhatsApp",
+    "req_clean_sub": "Simple : 10 € · Complet : offert au-delà d'une semaine",
     "clean_modal_title": "🧹 Ménage de la chambre",
-    "clean_modal_text": "🔒 &nbsp;Notre équipe <strong>n'entre jamais dans votre chambre sans vous prévenir</strong>. Votre intimité est notre priorité.<br><br>🧹 &nbsp;Demandez un <strong>ménage simple</strong> — rangement, serpillière — à tout moment.<br><br>🧽 &nbsp;Le <strong>nettoyage complet</strong> est disponible sur demande — <strong>écrivez-nous sur WhatsApp</strong> pour vérifier la disponibilité.",
-    "clean_btn_basic": "🧹 Ménage simple",
-    "clean_btn_full": "🧽 Nettoyage complet · disponibilité",
+    "clean_modal_text": "🔒 &nbsp;Notre équipe <strong>n'entre jamais dans votre chambre sans vous prévenir</strong>. Votre intimité est notre priorité.<br><br>🧹 &nbsp;<strong>Ménage simple</strong> — rangement, serpillière — pour <strong>10 €</strong>, selon disponibilité.<br><br>🧽 &nbsp;Le <strong>nettoyage complet est offert pour les séjours de plus d'une semaine</strong>. Pour les séjours plus courts, <strong>écrivez-nous sur WhatsApp</strong> pour vérifier la disponibilité.",
+    "clean_btn_basic": "🧹 Ménage simple · 10 €",
+    "clean_btn_full": "🧽 Nettoyage complet",
     "late_modal_title": "⏰ Départ tardif",
     "late_modal_text": "Le départ tardif est soumis à disponibilité.<br><br>Pour le demander, contactez-nous directement:<br><br>📲 &nbsp;<strong>WhatsApp / Téléphone</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>E-mail</strong><br>lesterrassessuites@gmail.com",
     "early_modal_title": "🌅 Arrivée anticipée",
@@ -1844,11 +1844,11 @@ const TRANSLATIONS = {
     "comment_placeholder": "Uw opmerking is zeer waardevol voor ons...",
     "send_comment_btn": "Opmerking verzenden",
     "req_sheets_sub": "1x per week · Ongeluk: laat het ons weten",
-    "req_clean_sub": "Volledige schoonmaak: beschikbaarheid via WhatsApp",
+    "req_clean_sub": "Basis: €10 · Volledig: gratis bij verblijf langer dan een week",
     "clean_modal_title": "🧹 Kamerschoonmaak",
-    "clean_modal_text": "🔒 &nbsp;Ons team <strong>betreedt uw kamer nooit zonder u eerst te informeren</strong>. Uw privacy staat voorop.<br><br>🧹 &nbsp;Vraag gerust een <strong>basisschoonmaak</strong> aan — opruimen, dweilen — wanneer u wilt.<br><br>🧽 &nbsp;Een <strong>volledige schoonmaak</strong> is op aanvraag mogelijk — <strong>stuur ons een WhatsApp</strong> om de beschikbaarheid te checken.",
-    "clean_btn_basic": "🧹 Basisschoonmaak",
-    "clean_btn_full": "🧽 Volledige schoonmaak · beschikbaarheid",
+    "clean_modal_text": "🔒 &nbsp;Ons team <strong>betreedt uw kamer nooit zonder u eerst te informeren</strong>. Uw privacy staat voorop.<br><br>🧹 &nbsp;<strong>Basisschoonmaak</strong> — opruimen, dweilen — voor <strong>€10</strong>, afhankelijk van beschikbaarheid.<br><br>🧽 &nbsp;De <strong>volledige schoonmaak is gratis bij verblijven langer dan een week</strong>. Bij kortere verblijven kunt u <strong>ons een WhatsApp sturen</strong> om de beschikbaarheid te checken.",
+    "clean_btn_basic": "🧹 Basisschoonmaak · €10",
+    "clean_btn_full": "🧽 Volledige schoonmaak",
     "late_modal_title": "⏰ Laat uitchecken",
     "late_modal_text": "Laat uitchecken is afhankelijk van beschikbaarheid.<br><br>Neem direct contact met ons op:<br><br>📲 &nbsp;<strong>WhatsApp / Telefoon</strong><br>+351 924 965 570<br><br>✉️ &nbsp;<strong>E-mail</strong><br>lesterrassessuites@gmail.com",
     "early_modal_title": "🌅 Vroeg inchecken",
@@ -2375,7 +2375,7 @@ function _OLD_requestSheetChange(type){
 
 function requestCleaning(type){
   closeModal('cleaning-modal');
-  showContactModal(type === 'basic' ? '🧹 Basic room clean' : '🧽 Full cleaning · check availability');
+  showContactModal(type === 'basic' ? '🧹 Basic clean · €10' : '🧽 Full cleaning · check availability');
 }
 function _OLD_requestCleaning(type){
   var subjects={basic:encodeURIComponent('🧹 Basic clean - Les Terrasses'),full:encodeURIComponent('🧽 Full cleaning - Les Terrasses')};
