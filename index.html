@@ -143,6 +143,24 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Jost',sans-serif;f
 #home-wifi .hw-note{font-size:10px;letter-spacing:0.08em;color:var(--mid);margin-top:2px;}
 @media (max-width:1000px){#home-wifi{left:24px;bottom:20px;}#home-wifi .hw-qr{display:none;}}
 
+/* MOVIL: solo pantallas estrechas (no afecta a la TV) */
+#home-wifi .hw-tap{display:none;}
+@media (max-width:700px){
+  #screen-welcome{justify-content:flex-start;padding:40px 18px 28px;}
+  .time-display{display:none;}
+  .logo-sub{letter-spacing:0.25em;font-size:10px;margin-bottom:24px;line-height:1.8;}
+  .guest-card{min-width:0;width:100%;padding:18px 20px;margin-bottom:22px;}
+  .welcome-greeting{margin-bottom:22px;}
+  .lang-selector{gap:8px;margin-bottom:24px;}
+  .lang-btn{padding:9px 16px;}
+  .start-btn{width:100%;max-width:340px;padding:18px 20px;}
+  #home-wifi{position:static;opacity:1;width:100%;max-width:340px;margin-top:22px;padding:14px 18px;background:rgba(255,255,255,0.9);border:1px solid rgba(122,115,85,0.2);border-left:3px solid var(--olive);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+  #home-wifi:active{background:var(--olive-bg);}
+  #home-wifi > div{flex:1;}
+  #home-wifi .hw-tap{display:block;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--olive);margin-top:8px;}
+  .location-tag{position:static;transform:none;margin-top:24px;letter-spacing:0.2em;line-height:1.8;text-align:center;}
+}
+
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 </style>
 </head>
@@ -190,9 +208,9 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Jost',sans-serif;f
     <button class="lang-btn" onclick="setLang('pt',this)">PT</button>
   </div>
   <button class="start-btn" id="start-btn" onclick="goToMenu()">Enter</button>
-  <div id="home-wifi">
+  <div id="home-wifi" onclick="copyWifi()">
     <svg viewBox="0 0 35 35" class="hw-qr" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg" class="segno"><path fill="#fff" d="M0 0h35v35h-35z"/><path class="qrline" stroke="#2e2e2e" d="M1 1.5h7m1 0h1m1 0h1m2 0h1m2 0h1m6 0h1m2 0h7m-33 1h1m5 0h1m2 0h6m1 0h1m1 0h2m1 0h1m2 0h1m1 0h1m5 0h1m-33 1h1m1 0h3m1 0h1m2 0h2m1 0h1m1 0h1m1 0h3m2 0h1m4 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h2m1 0h2m3 0h2m4 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h1m2 0h1m2 0h1m1 0h4m1 0h1m1 0h3m1 0h1m-33 1h1m5 0h1m1 0h2m1 0h1m1 0h3m1 0h2m1 0h1m1 0h1m3 0h1m5 0h1m-33 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-25 1h1m3 0h1m4 0h7m-24 1h1m3 0h1m1 0h4m1 0h1m2 0h4m2 0h3m2 0h5m2 0h1m-33 1h1m6 0h1m4 0h1m2 0h1m1 0h1m5 0h2m1 0h2m-27 1h1m1 0h1m1 0h4m1 0h2m1 0h4m1 0h1m2 0h1m1 0h2m2 0h1m3 0h1m-29 1h1m4 0h1m2 0h3m1 0h1m3 0h1m1 0h2m2 0h1m1 0h1m3 0h1m-32 1h4m1 0h2m1 0h1m4 0h1m2 0h1m2 0h1m1 0h1m4 0h1m1 0h1m1 0h1m1 0h1m-32 1h1m1 0h2m3 0h3m1 0h1m1 0h1m3 0h3m1 0h3m2 0h1m2 0h3m-33 1h1m2 0h1m2 0h1m2 0h1m2 0h1m2 0h1m4 0h2m1 0h3m1 0h1m2 0h2m-30 1h2m1 0h1m1 0h4m3 0h5m2 0h1m3 0h4m2 0h2m-33 1h2m2 0h5m5 0h1m1 0h2m1 0h1m1 0h2m3 0h4m2 0h1m-33 1h1m1 0h2m3 0h1m1 0h2m3 0h2m2 0h1m2 0h2m3 0h1m2 0h3m-30 1h2m2 0h1m1 0h1m3 0h1m2 0h1m1 0h1m4 0h3m2 0h5m-31 1h2m4 0h2m1 0h3m3 0h4m1 0h1m3 0h2m1 0h1m-29 1h1m3 0h6m2 0h1m1 0h1m3 0h4m1 0h1m2 0h3m1 0h1m-31 1h2m2 0h1m5 0h4m2 0h1m2 0h1m2 0h2m3 0h1m1 0h2m1 0h1m-29 1h3m2 0h1m2 0h3m1 0h4m2 0h3m2 0h1m1 0h1m1 0h1m-29 1h3m1 0h1m2 0h1m1 0h2m3 0h5m1 0h2m2 0h2m-29 1h5m1 0h3m2 0h7m3 0h2m1 0h5m2 0h2m-25 1h1m2 0h1m2 0h2m1 0h1m3 0h4m3 0h1m2 0h1m-32 1h7m1 0h1m1 0h2m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m2 0h1m-32 1h1m5 0h1m2 0h1m2 0h1m1 0h3m3 0h2m1 0h2m3 0h2m2 0h1m-33 1h1m1 0h3m1 0h1m1 0h1m1 0h1m5 0h1m2 0h2m3 0h6m1 0h1m-32 1h1m1 0h3m1 0h1m2 0h1m1 0h4m3 0h3m2 0h2m1 0h2m1 0h2m-31 1h1m1 0h3m1 0h1m2 0h1m1 0h1m2 0h2m5 0h1m1 0h1m4 0h1m-29 1h1m5 0h1m2 0h1m1 0h1m3 0h4m2 0h4m2 0h1m-28 1h7m1 0h2m1 0h2m3 0h9m3 0h2m2 0h1"/></svg>
-    <div><div class="hw-label">WiFi</div><div class="hw-val">lesterrasses134</div><div class="hw-note" id="home-wifi-note">Network &amp; password</div></div>
+    <div><div class="hw-label">WiFi</div><div class="hw-val">lesterrasses134</div><div class="hw-note" id="home-wifi-note">Network &amp; password</div><div class="hw-tap" id="home-wifi-tap">Tap to copy the password</div></div>
   </div>
   <div class="location-tag">Rua São João 134 · Calheta · Madeira · Portugal</div>
 </div>
@@ -900,6 +918,8 @@ const TRANSLATIONS = {
     "wifi_label": "WiFi · Red",
     "wifi_note": "Contraseña: lesterrasses134 · Disponible en toda la propiedad",
     "wifi_home": "Red y contraseña",
+    "wifi_tap": "Toca para copiar la contraseña",
+    "wifi_copied": "Contraseña copiada · pégala al conectarte a lesterrasses134",
     "qr_connect": "Conexión rápida",
     "qr_scan": "Escanee con la cámara de su móvil para conectarse al instante.",
     "checkin_time_label": "Check-in",
@@ -1073,6 +1093,8 @@ const TRANSLATIONS = {
     "wifi_label": "WiFi · Rede",
     "wifi_note": "Senha: lesterrasses134 · Disponível em toda a propriedade",
     "wifi_home": "Rede e senha",
+    "wifi_tap": "Toque para copiar a senha",
+    "wifi_copied": "Senha copiada · cole-a ao ligar-se a lesterrasses134",
     "qr_connect": "Ligação rápida",
     "qr_scan": "Aponte a câmara do seu telemóvel para ligar instantaneamente.",
     "checkin_time_label": "Check-in",
@@ -1246,6 +1268,8 @@ const TRANSLATIONS = {
     "wifi_label": "WiFi · Network",
     "wifi_note": "Password: lesterrasses134 · Available throughout the property",
     "wifi_home": "Network & password",
+    "wifi_tap": "Tap to copy the password",
+    "wifi_copied": "Password copied · paste it when joining lesterrasses134",
     "qr_connect": "Quick connect",
     "qr_scan": "Point your phone camera to connect instantly.",
     "checkin_time_label": "Check-in",
@@ -1419,6 +1443,8 @@ const TRANSLATIONS = {
     "wifi_label": "WLAN · Netzwerk",
     "wifi_note": "Passwort: lesterrasses134 · Überall auf dem Grundstück verfügbar",
     "wifi_home": "Netzwerk & Passwort",
+    "wifi_tap": "Tippen, um das Passwort zu kopieren",
+    "wifi_copied": "Passwort kopiert · beim Verbinden mit lesterrasses134 einfügen",
     "qr_connect": "Schnellverbindung",
     "qr_scan": "Kamera auf den QR-Code richten und sofort verbinden.",
     "checkin_time_label": "Check-in",
@@ -1592,6 +1618,8 @@ const TRANSLATIONS = {
     "wifi_label": "WiFi · Réseau",
     "wifi_note": "Mot de passe: lesterrasses134 · Disponible dans toute la propriété",
     "wifi_home": "Réseau et mot de passe",
+    "wifi_tap": "Touchez pour copier le mot de passe",
+    "wifi_copied": "Mot de passe copié · collez-le en rejoignant lesterrasses134",
     "qr_connect": "Connexion rapide",
     "qr_scan": "Pointez votre téléphone vers le QR pour vous connecter.",
     "checkin_time_label": "Arrivée",
@@ -1765,6 +1793,8 @@ const TRANSLATIONS = {
     "wifi_label": "WiFi · Netwerk",
     "wifi_note": "Wachtwoord: lesterrasses134 · Beschikbaar in het hele pand",
     "wifi_home": "Netwerk & wachtwoord",
+    "wifi_tap": "Tik om het wachtwoord te kopiëren",
+    "wifi_copied": "Wachtwoord gekopieerd · plak het bij verbinden met lesterrasses134",
     "qr_connect": "Snel verbinden",
     "qr_scan": "Richt uw camera op de QR-code om direct te verbinden.",
     "checkin_time_label": "Check-in",
@@ -2274,7 +2304,7 @@ function setLang(l,btn){
   ['checkin','room','req','cal','sol','co','guide'].forEach(function(id){
     st('back-'+id,t.back); st('title-'+id,t['title_'+id]); st('script-'+id,t['script_'+id]);
   });
-  st('wifi-label',t.wifi_label); st('home-wifi-note',t.wifi_home); st('wifi-note',t.wifi_note);
+  st('wifi-label',t.wifi_label); st('home-wifi-note',t.wifi_home); st('home-wifi-tap',t.wifi_tap); st('wifi-note',t.wifi_note);
   st('qr-connect',t.qr_connect); st('qr-scan',t.qr_scan);
   st('checkin-time-label',t.checkin_time_label); st('checkin-time-val',t.checkin_time_val);
   st('checkin-time-note',t.checkin_time_note);
@@ -2436,6 +2466,24 @@ function showContactModal(requestType){
 function closeContactModal(){
   var modal = document.getElementById('contact-info-modal');
   if(modal) modal.style.display = 'none';
+}
+function copyWifi(){
+  if(!window.matchMedia('(max-width:700px)').matches) return;
+  var pw='lesterrasses134';
+  var t=(typeof TRANSLATIONS!=='undefined' && TRANSLATIONS[window._currentLang])||{};
+  var done=function(){
+    showToast(t.wifi_copied||'Password copied');
+    var ua=navigator.userAgent;
+    if(/Android/i.test(ua) && /Mobile/i.test(ua)){
+      setTimeout(function(){ try{ window.location.href='intent:#Intent;action=android.settings.WIFI_SETTINGS;end'; }catch(e){} },1400);
+    }
+  };
+  var fallback=function(){
+    try{ var ta=document.createElement('textarea'); ta.value=pw; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0,99); document.execCommand('copy'); document.body.removeChild(ta); }catch(e){}
+    done();
+  };
+  if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(pw).then(done,fallback); } else { fallback(); }
 }
 function showToast(msg){
   var t=document.getElementById('toast');
