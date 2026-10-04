@@ -135,6 +135,14 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Jost',sans-serif;f
 .modal-btns{display:flex;gap:12px;flex-wrap:wrap;}
 .modal-btn{flex:1;border:none;padding:14px 18px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;min-width:130px;color:white;}
 
+/* WIFI discreto en la home */
+#home-wifi{position:absolute;left:44px;bottom:36px;display:flex;align-items:center;gap:14px;text-align:left;opacity:0.82;z-index:5;}
+#home-wifi .hw-qr{width:64px;height:64px;background:#fff;padding:3px;box-shadow:0 1px 6px rgba(0,0,0,0.08);flex:none;}
+#home-wifi .hw-label{font-size:9px;letter-spacing:0.4em;text-transform:uppercase;color:var(--olive);margin-bottom:3px;}
+#home-wifi .hw-val{font-size:15px;letter-spacing:0.06em;color:var(--black);font-weight:400;}
+#home-wifi .hw-note{font-size:10px;letter-spacing:0.08em;color:var(--mid);margin-top:2px;}
+@media (max-width:1000px){#home-wifi{left:24px;bottom:20px;}#home-wifi .hw-qr{display:none;}}
+
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 </style>
 </head>
@@ -182,6 +190,10 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Jost',sans-serif;f
     <button class="lang-btn" onclick="setLang('pt',this)">PT</button>
   </div>
   <button class="start-btn" id="start-btn" onclick="goToMenu()">Enter</button>
+  <div id="home-wifi">
+    <svg viewBox="0 0 35 35" class="hw-qr" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg" class="segno"><path fill="#fff" d="M0 0h35v35h-35z"/><path class="qrline" stroke="#2e2e2e" d="M1 1.5h7m1 0h1m1 0h1m2 0h1m2 0h1m6 0h1m2 0h7m-33 1h1m5 0h1m2 0h6m1 0h1m1 0h2m1 0h1m2 0h1m1 0h1m5 0h1m-33 1h1m1 0h3m1 0h1m2 0h2m1 0h1m1 0h1m1 0h3m2 0h1m4 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h2m1 0h2m3 0h2m4 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h1m2 0h1m2 0h1m1 0h4m1 0h1m1 0h3m1 0h1m-33 1h1m5 0h1m1 0h2m1 0h1m1 0h3m1 0h2m1 0h1m1 0h1m3 0h1m5 0h1m-33 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-25 1h1m3 0h1m4 0h7m-24 1h1m3 0h1m1 0h4m1 0h1m2 0h4m2 0h3m2 0h5m2 0h1m-33 1h1m6 0h1m4 0h1m2 0h1m1 0h1m5 0h2m1 0h2m-27 1h1m1 0h1m1 0h4m1 0h2m1 0h4m1 0h1m2 0h1m1 0h2m2 0h1m3 0h1m-29 1h1m4 0h1m2 0h3m1 0h1m3 0h1m1 0h2m2 0h1m1 0h1m3 0h1m-32 1h4m1 0h2m1 0h1m4 0h1m2 0h1m2 0h1m1 0h1m4 0h1m1 0h1m1 0h1m1 0h1m-32 1h1m1 0h2m3 0h3m1 0h1m1 0h1m3 0h3m1 0h3m2 0h1m2 0h3m-33 1h1m2 0h1m2 0h1m2 0h1m2 0h1m2 0h1m4 0h2m1 0h3m1 0h1m2 0h2m-30 1h2m1 0h1m1 0h4m3 0h5m2 0h1m3 0h4m2 0h2m-33 1h2m2 0h5m5 0h1m1 0h2m1 0h1m1 0h2m3 0h4m2 0h1m-33 1h1m1 0h2m3 0h1m1 0h2m3 0h2m2 0h1m2 0h2m3 0h1m2 0h3m-30 1h2m2 0h1m1 0h1m3 0h1m2 0h1m1 0h1m4 0h3m2 0h5m-31 1h2m4 0h2m1 0h3m3 0h4m1 0h1m3 0h2m1 0h1m-29 1h1m3 0h6m2 0h1m1 0h1m3 0h4m1 0h1m2 0h3m1 0h1m-31 1h2m2 0h1m5 0h4m2 0h1m2 0h1m2 0h2m3 0h1m1 0h2m1 0h1m-29 1h3m2 0h1m2 0h3m1 0h4m2 0h3m2 0h1m1 0h1m1 0h1m-29 1h3m1 0h1m2 0h1m1 0h2m3 0h5m1 0h2m2 0h2m-29 1h5m1 0h3m2 0h7m3 0h2m1 0h5m2 0h2m-25 1h1m2 0h1m2 0h2m1 0h1m3 0h4m3 0h1m2 0h1m-32 1h7m1 0h1m1 0h2m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m2 0h1m-32 1h1m5 0h1m2 0h1m2 0h1m1 0h3m3 0h2m1 0h2m3 0h2m2 0h1m-33 1h1m1 0h3m1 0h1m1 0h1m1 0h1m5 0h1m2 0h2m3 0h6m1 0h1m-32 1h1m1 0h3m1 0h1m2 0h1m1 0h4m3 0h3m2 0h2m1 0h2m1 0h2m-31 1h1m1 0h3m1 0h1m2 0h1m1 0h1m2 0h2m5 0h1m1 0h1m4 0h1m-29 1h1m5 0h1m2 0h1m1 0h1m3 0h4m2 0h4m2 0h1m-28 1h7m1 0h2m1 0h2m3 0h9m3 0h2m2 0h1"/></svg>
+    <div><div class="hw-label">WiFi</div><div class="hw-val">lesterrasses134</div><div class="hw-note" id="home-wifi-note">Network &amp; password</div></div>
+  </div>
   <div class="location-tag">Rua São João 134 · Calheta · Madeira · Portugal</div>
 </div>
 
@@ -887,6 +899,7 @@ const TRANSLATIONS = {
     "title_co": "Check-out",
     "wifi_label": "WiFi · Red",
     "wifi_note": "Contraseña: lesterrasses134 · Disponible en toda la propiedad",
+    "wifi_home": "Red y contraseña",
     "qr_connect": "Conexión rápida",
     "qr_scan": "Escanee con la cámara de su móvil para conectarse al instante.",
     "checkin_time_label": "Check-in",
@@ -1059,6 +1072,7 @@ const TRANSLATIONS = {
     "title_co": "Check-out",
     "wifi_label": "WiFi · Rede",
     "wifi_note": "Senha: lesterrasses134 · Disponível em toda a propriedade",
+    "wifi_home": "Rede e senha",
     "qr_connect": "Ligação rápida",
     "qr_scan": "Aponte a câmara do seu telemóvel para ligar instantaneamente.",
     "checkin_time_label": "Check-in",
@@ -1231,6 +1245,7 @@ const TRANSLATIONS = {
     "title_co": "Check-out",
     "wifi_label": "WiFi · Network",
     "wifi_note": "Password: lesterrasses134 · Available throughout the property",
+    "wifi_home": "Network & password",
     "qr_connect": "Quick connect",
     "qr_scan": "Point your phone camera to connect instantly.",
     "checkin_time_label": "Check-in",
@@ -1403,6 +1418,7 @@ const TRANSLATIONS = {
     "title_co": "Check-out",
     "wifi_label": "WLAN · Netzwerk",
     "wifi_note": "Passwort: lesterrasses134 · Überall auf dem Grundstück verfügbar",
+    "wifi_home": "Netzwerk & Passwort",
     "qr_connect": "Schnellverbindung",
     "qr_scan": "Kamera auf den QR-Code richten und sofort verbinden.",
     "checkin_time_label": "Check-in",
@@ -1575,6 +1591,7 @@ const TRANSLATIONS = {
     "title_co": "Check-out",
     "wifi_label": "WiFi · Réseau",
     "wifi_note": "Mot de passe: lesterrasses134 · Disponible dans toute la propriété",
+    "wifi_home": "Réseau et mot de passe",
     "qr_connect": "Connexion rapide",
     "qr_scan": "Pointez votre téléphone vers le QR pour vous connecter.",
     "checkin_time_label": "Arrivée",
@@ -1747,6 +1764,7 @@ const TRANSLATIONS = {
     "title_co": "Check-out",
     "wifi_label": "WiFi · Netwerk",
     "wifi_note": "Wachtwoord: lesterrasses134 · Beschikbaar in het hele pand",
+    "wifi_home": "Netwerk & wachtwoord",
     "qr_connect": "Snel verbinden",
     "qr_scan": "Richt uw camera op de QR-code om direct te verbinden.",
     "checkin_time_label": "Check-in",
@@ -2256,7 +2274,7 @@ function setLang(l,btn){
   ['checkin','room','req','cal','sol','co','guide'].forEach(function(id){
     st('back-'+id,t.back); st('title-'+id,t['title_'+id]); st('script-'+id,t['script_'+id]);
   });
-  st('wifi-label',t.wifi_label); st('wifi-note',t.wifi_note);
+  st('wifi-label',t.wifi_label); st('home-wifi-note',t.wifi_home); st('wifi-note',t.wifi_note);
   st('qr-connect',t.qr_connect); st('qr-scan',t.qr_scan);
   st('checkin-time-label',t.checkin_time_label); st('checkin-time-val',t.checkin_time_val);
   st('checkin-time-note',t.checkin_time_note);
