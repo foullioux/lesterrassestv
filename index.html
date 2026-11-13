@@ -72,6 +72,24 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Jost',sans-serif;f
 .card-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin-bottom:6px;color:var(--black);}
 .card-desc{font-size:11px;color:var(--mid);letter-spacing:0.08em;line-height:1.6;}
 
+
+/* MASSAGE (Ventura Cuida) */
+.massage-banner{margin-top:16px;background:linear-gradient(135deg,#faf9f7,#efe9df);border:1px solid rgba(122,115,85,0.25);border-left:3px solid var(--olive);padding:20px 24px;display:flex;align-items:center;gap:20px;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.04);transition:all 0.3s;}
+.massage-banner:hover{box-shadow:0 6px 24px rgba(122,115,85,0.18);transform:translateY(-1px);}
+.massage-banner .mb-icon{font-size:30px;flex:none;}
+.massage-banner .mb-body{flex:1;}
+.massage-banner .mb-kicker{font-size:9px;letter-spacing:0.4em;text-transform:uppercase;color:var(--olive);margin-bottom:4px;}
+.massage-banner .mb-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--black);margin-bottom:4px;}
+.massage-banner .mb-text{font-size:13px;line-height:1.6;color:var(--dark);}
+.massage-banner .mb-cta{flex:none;background:var(--olive);color:white;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:12px 18px;white-space:nowrap;}
+.price-table{width:100%;border-collapse:collapse;background:white;border:1px solid rgba(122,115,85,0.15);margin-bottom:12px;}
+.price-table th{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--olive);font-weight:400;text-align:left;padding:12px 18px;border-bottom:1px solid rgba(122,115,85,0.15);}
+.price-table td{font-size:16px;color:var(--black);padding:12px 18px;border-bottom:1px solid rgba(122,115,85,0.08);}
+.price-table td.pr{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--olive);}
+.massage-book{display:flex;align-items:center;gap:24px;}
+.massage-book img{width:150px;height:150px;border:4px solid white;box-shadow:0 2px 12px rgba(0,0,0,0.1);flex:none;}
+.massage-legal{font-size:10px;color:var(--mid);line-height:1.6;margin-top:16px;}
+
 /* SUBSCREEN ELEMENTS */
 .back-btn{background:transparent;border:none;color:var(--mid);cursor:pointer;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;margin-bottom:28px;display:flex;align-items:center;gap:10px;transition:color 0.3s;}
 .back-btn:hover{color:var(--olive);}
@@ -268,6 +286,11 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Jost',sans-serif;f
       <div class="card-desc" id="card-co-desc">Rating · Departure instructions</div>
     </div>
 
+  </div>
+  <div class="massage-banner" onclick="showScreen('screen-massage')">
+    <span class="mb-icon">💆</span>
+    <div class="mb-body"><div class="mb-kicker" id="mb-kicker">New · Wellness</div><div class="mb-title" id="mb-title">Massage in your suite</div><div class="mb-text" id="mb-text">Professional therapists come to your suite · Individual or couples massage · Book with 2 hours' notice</div></div>
+    <span class="mb-cta" id="mb-cta">See options →</span>
   </div>
   <div class="help-banner" onclick="showContactModal('')">
     <span class="hb-icon">💬</span>
@@ -789,6 +812,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Jost',sans-serif;f
     <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://maps.google.com/?q=Ponta+do+Pargo+Madeira" style="width:64px;height:64px;flex-shrink:0;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.1);">
   </div></div>
 </div></div>
+</div>
 
 <!-- ===== SUSTAINABILITY ===== -->
 <div class="screen subscreen" id="screen-solar">
@@ -804,6 +828,40 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Jost',sans-serif;f
       <div id="solar-label" class="info-label">Our commitment</div>
       <div id="solar-text" style="font-size:13px;line-height:1.8;color:var(--dark);">Les Terrasses generates its own electricity through solar energy. Your stay is powered mainly by the Madeiran sun, reducing our carbon footprint. The battery stores energy for nights and cloudy days.</div>
     </div>
+  </div>
+</div>
+
+<!-- ===== MASSAGE (Ventura Cuida) ===== -->
+<div class="screen subscreen" id="screen-massage">
+  <button class="back-btn" onclick="goToMenu()">← <span id="back-massage">Main menu</span></button>
+  <div class="sub-header"><h2 class="sub-title" id="title-massage">Massage in your suite</h2><span class="sub-script" id="script-massage">Relax without leaving</span></div>
+  <div class="scroll-area">
+    <div class="info-block" style="background:linear-gradient(135deg,#faf9f7,#f0ede8);">
+      <div class="info-label" id="ms-intro-label">💆 Ventura Cuida · Massage at your accommodation</div>
+      <div id="ms-intro" style="font-size:14px;line-height:1.9;color:var(--dark);">Qualified therapists come to your suite with everything needed: table, oils and towels.<br>Couples massage: two therapists at the same time.<br>Book at least <strong>2 hours</strong> in advance · Available every day of the year except Christmas.</div>
+    </div>
+    <div class="divider"><span id="ms-div-services">Treatments</span></div>
+    <div class="place-item"><div class="place-num">1</div><div><div class="place-name" id="ms-s1-name">Relaxation massage</div><div class="place-desc" id="ms-s1-desc">Gentle, flowing massage to release tension and fully unwind.</div></div></div>
+    <div class="place-item"><div class="place-num">2</div><div><div class="place-name" id="ms-s2-name">Manual lymphatic drainage</div><div class="place-desc" id="ms-s2-desc">Light rhythmic technique that reduces fluid retention — ideal after a flight or a day of hiking.</div></div></div>
+    <div class="place-item"><div class="place-num">3</div><div><div class="place-name" id="ms-s3-name">Therapeutic massage</div><div class="place-desc" id="ms-s3-desc">Deeper work on muscle pain and contractures, performed by a qualified physiotherapist.</div></div></div>
+    <div class="divider"><span id="ms-div-prices">Prices · per person</span></div>
+    <table class="price-table">
+      <tr><th id="ms-th-dur">Duration</th><th id="ms-th-one">1 person</th><th id="ms-th-two">Couple (2 people)</th></tr>
+      <tr><td>30 min</td><td class="pr">45 €</td><td class="pr">90 €</td></tr>
+      <tr><td>60 min</td><td class="pr">65 €</td><td class="pr">130 €</td></tr>
+      <tr><td>90 min</td><td class="pr">80 €</td><td class="pr">160 €</td></tr>
+    </table>
+    <div class="divider"><span id="ms-div-book">How to book</span></div>
+    <div class="info-block">
+      <div class="massage-book">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https%3A%2F%2Fwww.venturacuida.com" alt="QR Ventura Cuida">
+        <div>
+          <div class="info-label" id="ms-book-label">Scan to book and pay online</div>
+          <div id="ms-book-text" style="font-size:14px;line-height:1.9;color:var(--dark);">Point your phone camera at the code, or use the QR on the frame in your suite.<br>📞 &nbsp;<strong>+351 928 095 512</strong><br>🌐 &nbsp;<strong>www.venturacuida.com</strong></div>
+        </div>
+      </div>
+    </div>
+    <p class="massage-legal" id="ms-legal">Service provided and invoiced directly by Ventura Cuida (Ventura &amp; Camara, Lda.), an independent company. Les Terrasses Suites is not a party to the service contract. Bookings, payments and cancellations are handled by Ventura Cuida.</p>
   </div>
 </div>
 
@@ -2383,6 +2441,26 @@ function setLang(l,btn){
   st('nature-footer', t.nature_footer);
   st('req-privacy',t.req_privacy);
 }
+
+
+// MASSAGE (Ventura Cuida) — i18n
+var MASSAGE_I18N = {"en": {"back": "Main menu", "mb_kicker": "New · Wellness", "mb_title": "Massage in your suite", "mb_text": "Professional therapists come to your suite · Individual or couples massage · Book with 2 hours' notice", "mb_cta": "See options →", "title": "Massage in your suite", "script": "Relax without leaving", "intro_label": "💆 Ventura Cuida · Massage at your accommodation", "intro": "Qualified therapists come to your suite with everything needed: table, oils and towels.<br>Couples massage: two therapists at the same time.<br>Book at least <strong>2 hours</strong> in advance · Available every day of the year except Christmas.", "div_services": "Treatments", "s1n": "Relaxation massage", "s1d": "Gentle, flowing massage to release tension and fully unwind.", "s2n": "Manual lymphatic drainage", "s2d": "Light rhythmic technique that reduces fluid retention — ideal after a flight or a day of hiking.", "s3n": "Therapeutic massage", "s3d": "Deeper work on muscle pain and contractures, performed by a qualified physiotherapist.", "div_prices": "Prices · per person", "th_dur": "Duration", "th_one": "1 person", "th_two": "Couple (2 people)", "div_book": "How to book", "book_label": "Scan to book and pay online", "book_text": "Point your phone camera at the code, or use the QR on the frame in your suite.<br>📞 &nbsp;<strong>+351 928 095 512</strong><br>🌐 &nbsp;<strong>www.venturacuida.com</strong>", "legal": "Service provided and invoiced directly by Ventura Cuida (Ventura & Camara, Lda.), an independent company. Les Terrasses Suites is not a party to the service contract. Bookings, payments and cancellations are handled by Ventura Cuida."}, "nl": {"back": "Hoofdmenu", "mb_kicker": "Nieuw · Wellness", "mb_title": "Massage in uw suite", "mb_text": "Professionele therapeuten komen naar uw suite · Individuele of duomassage · Boek 2 uur van tevoren", "mb_cta": "Bekijk opties →", "title": "Massage in uw suite", "script": "Ontspannen zonder weg te gaan", "intro_label": "💆 Ventura Cuida · Massage in uw accommodatie", "intro": "Gekwalificeerde therapeuten komen naar uw suite met alles wat nodig is: massagetafel, oliën en handdoeken.<br>Duomassage: twee therapeuten tegelijk.<br>Boek minimaal <strong>2 uur</strong> van tevoren · Elke dag van het jaar beschikbaar, behalve met Kerstmis.", "div_services": "Behandelingen", "s1n": "Ontspanningsmassage", "s1d": "Zachte, vloeiende massage om spanning los te laten en volledig tot rust te komen.", "s2n": "Manuele lymfedrainage", "s2d": "Lichte, ritmische techniek die vochtophoping vermindert — ideaal na een vlucht of een wandeldag.", "s3n": "Therapeutische massage", "s3d": "Diepere behandeling van spierpijn en verkrampingen, uitgevoerd door een gekwalificeerde fysiotherapeut.", "div_prices": "Prijzen · per persoon", "th_dur": "Duur", "th_one": "1 persoon", "th_two": "Duo (2 personen)", "div_book": "Hoe te boeken", "book_label": "Scan om online te boeken en te betalen", "book_text": "Richt de camera van uw telefoon op de code, of gebruik de QR-code op het lijstje in uw suite.<br>📞 &nbsp;<strong>+351 928 095 512</strong><br>🌐 &nbsp;<strong>www.venturacuida.com</strong>", "legal": "Dienst verleend en rechtstreeks gefactureerd door Ventura Cuida (Ventura & Camara, Lda.), een onafhankelijk bedrijf. Les Terrasses Suites is geen partij bij de dienstverleningsovereenkomst. Boekingen, betalingen en annuleringen worden door Ventura Cuida afgehandeld."}, "de": {"back": "Hauptmenü", "mb_kicker": "Neu · Wellness", "mb_title": "Massage in Ihrer Suite", "mb_text": "Professionelle Therapeutinnen kommen in Ihre Suite · Einzel- oder Paarmassage · Buchung 2 Stunden im Voraus", "mb_cta": "Angebote ansehen →", "title": "Massage in Ihrer Suite", "script": "Entspannen, ohne hinauszugehen", "intro_label": "💆 Ventura Cuida · Massage in Ihrer Unterkunft", "intro": "Qualifizierte Therapeutinnen kommen mit allem Nötigen in Ihre Suite: Massageliege, Öle und Handtücher.<br>Paarmassage: zwei Therapeutinnen gleichzeitig.<br>Buchung mindestens <strong>2 Stunden</strong> im Voraus · Täglich verfügbar, außer an Weihnachten.", "div_services": "Behandlungen", "s1n": "Entspannungsmassage", "s1d": "Sanfte, fließende Massage, um Verspannungen zu lösen und ganz abzuschalten.", "s2n": "Manuelle Lymphdrainage", "s2d": "Leichte, rhythmische Technik gegen Wassereinlagerungen — ideal nach einem Flug oder einem Wandertag.", "s3n": "Therapeutische Massage", "s3d": "Tiefere Behandlung von Muskelschmerzen und Verspannungen, durchgeführt von einer qualifizierten Physiotherapeutin.", "div_prices": "Preise · pro Person", "th_dur": "Dauer", "th_one": "1 Person", "th_two": "Paar (2 Personen)", "div_book": "Buchung", "book_label": "Scannen, online buchen und bezahlen", "book_text": "Richten Sie die Handykamera auf den Code oder nutzen Sie den QR-Code im Bilderrahmen Ihrer Suite.<br>📞 &nbsp;<strong>+351 928 095 512</strong><br>🌐 &nbsp;<strong>www.venturacuida.com</strong>", "legal": "Die Leistung wird direkt von Ventura Cuida (Ventura & Camara, Lda.), einem unabhängigen Unternehmen, erbracht und in Rechnung gestellt. Les Terrasses Suites ist nicht Vertragspartei. Buchungen, Zahlungen und Stornierungen werden von Ventura Cuida abgewickelt."}, "fr": {"back": "Menu principal", "mb_kicker": "Nouveau · Bien-être", "mb_title": "Massage dans votre suite", "mb_text": "Des thérapeutes professionnelles viennent dans votre suite · Massage individuel ou en duo · Réservation 2 heures à l'avance", "mb_cta": "Voir les options →", "title": "Massage dans votre suite", "script": "Se détendre sans sortir", "intro_label": "💆 Ventura Cuida · Massage dans votre hébergement", "intro": "Des thérapeutes qualifiées viennent dans votre suite avec tout le nécessaire : table, huiles et serviettes.<br>Massage en duo : deux thérapeutes en même temps.<br>Réservation au moins <strong>2 heures</strong> à l'avance · Disponible tous les jours de l'année sauf à Noël.", "div_services": "Soins", "s1n": "Massage relaxant", "s1d": "Massage doux et fluide pour relâcher les tensions et se détendre pleinement.", "s2n": "Drainage lymphatique manuel", "s2d": "Technique légère et rythmée qui réduit la rétention d'eau — idéale après un vol ou une journée de randonnée.", "s3n": "Massage thérapeutique", "s3d": "Travail plus profond sur les douleurs musculaires et les contractures, réalisé par une kinésithérapeute qualifiée.", "div_prices": "Tarifs · par personne", "th_dur": "Durée", "th_one": "1 personne", "th_two": "Duo (2 personnes)", "div_book": "Comment réserver", "book_label": "Scannez pour réserver et payer en ligne", "book_text": "Pointez l'appareil photo de votre téléphone vers le code, ou utilisez le QR du cadre dans votre suite.<br>📞 &nbsp;<strong>+351 928 095 512</strong><br>🌐 &nbsp;<strong>www.venturacuida.com</strong>", "legal": "Service fourni et facturé directement par Ventura Cuida (Ventura & Camara, Lda.), société indépendante. Les Terrasses Suites n'est pas partie au contrat de prestation. Les réservations, paiements et annulations sont gérés par Ventura Cuida."}, "es": {"back": "Menú principal", "mb_kicker": "Nuevo · Bienestar", "mb_title": "Masaje en su suite", "mb_text": "Terapeutas profesionales vienen a su suite · Masaje individual o en pareja · Reserve con 2 horas de antelación", "mb_cta": "Ver opciones →", "title": "Masaje en su suite", "script": "Relájese sin salir", "intro_label": "💆 Ventura Cuida · Masaje en su alojamiento", "intro": "Terapeutas cualificadas vienen a su suite con todo lo necesario: camilla, aceites y toallas.<br>Masaje en pareja: dos terapeutas a la vez.<br>Reserve con al menos <strong>2 horas</strong> de antelación · Disponible todos los días del año excepto en Navidad.", "div_services": "Tratamientos", "s1n": "Masaje relajante", "s1d": "Masaje suave y fluido para liberar tensiones y desconectar por completo.", "s2n": "Drenaje linfático manual", "s2d": "Técnica ligera y rítmica que reduce la retención de líquidos — ideal después de un vuelo o un día de senderismo.", "s3n": "Masaje terapéutico", "s3d": "Trabajo más profundo sobre dolores musculares y contracturas, realizado por una fisioterapeuta cualificada.", "div_prices": "Precios · por persona", "th_dur": "Duración", "th_one": "1 persona", "th_two": "Pareja (2 personas)", "div_book": "Cómo reservar", "book_label": "Escanee para reservar y pagar online", "book_text": "Apunte la cámara de su móvil al código, o use el QR del cuadro de su suite.<br>📞 &nbsp;<strong>+351 928 095 512</strong><br>🌐 &nbsp;<strong>www.venturacuida.com</strong>", "legal": "Servicio prestado y facturado directamente por Ventura Cuida (Ventura & Camara, Lda.), empresa independiente. Les Terrasses Suites no es parte en el contrato de prestación de servicios. Las reservas, pagos y cancelaciones los gestiona Ventura Cuida."}, "pt": {"back": "Menu principal", "mb_kicker": "Novidade · Bem-estar", "mb_title": "Massagem na sua suite", "mb_text": "Terapeutas profissionais vêm à sua suite · Massagem individual ou de casal · Marque com 2 horas de antecedência", "mb_cta": "Ver opções →", "title": "Massagem na sua suite", "script": "Relaxe sem sair", "intro_label": "💆 Ventura Cuida · Massagem no seu alojamento", "intro": "Terapeutas qualificadas vêm à sua suite com tudo o necessário: marquesa, óleos e toalhas.<br>Massagem de casal: duas terapeutas em simultâneo.<br>Marque com pelo menos <strong>2 horas</strong> de antecedência · Disponível todos os dias do ano, exceto no Natal.", "div_services": "Tratamentos", "s1n": "Massagem de relaxamento", "s1d": "Massagem suave e envolvente para libertar tensões e desligar por completo.", "s2n": "Drenagem linfática manual", "s2d": "Técnica leve e rítmica que reduz a retenção de líquidos — ideal depois de um voo ou de um dia de caminhada.", "s3n": "Massagem terapêutica", "s3d": "Trabalho mais profundo sobre dores musculares e contraturas, realizado por uma fisioterapeuta qualificada.", "div_prices": "Preços · por pessoa", "th_dur": "Duração", "th_one": "1 pessoa", "th_two": "Casal (2 pessoas)", "div_book": "Como marcar", "book_label": "Digitalize para marcar e pagar online", "book_text": "Aponte a câmara do telemóvel para o código, ou use o QR do quadro na sua suite.<br>📞 &nbsp;<strong>+351 928 095 512</strong><br>🌐 &nbsp;<strong>www.venturacuida.com</strong>", "legal": "Serviço prestado e faturado diretamente pela Ventura Cuida (Ventura & Camara, Lda.), entidade independente. O Les Terrasses Suites não é parte no contrato de prestação de serviços. As marcações, pagamentos e cancelamentos são geridos pela Ventura Cuida."}};
+function applyMassageLang(l){
+  var m = MASSAGE_I18N[l] || MASSAGE_I18N.en;
+  function st(id,v){ var el=document.getElementById(id); if(el&&v) el.textContent=v; }
+  function sh(id,v){ var el=document.getElementById(id); if(el&&v) el.innerHTML=v; }
+  st('back-massage',m.back); st('mb-kicker',m.mb_kicker); st('mb-title',m.mb_title); st('mb-text',m.mb_text); st('mb-cta',m.mb_cta);
+  st('title-massage',m.title); st('script-massage',m.script); st('ms-intro-label',m.intro_label); sh('ms-intro',m.intro);
+  st('ms-div-services',m.div_services); st('ms-s1-name',m.s1n); st('ms-s1-desc',m.s1d); st('ms-s2-name',m.s2n); st('ms-s2-desc',m.s2d); st('ms-s3-name',m.s3n); st('ms-s3-desc',m.s3d);
+  st('ms-div-prices',m.div_prices); st('ms-th-dur',m.th_dur); st('ms-th-one',m.th_one); st('ms-th-two',m.th_two);
+  st('ms-div-book',m.div_book); st('ms-book-label',m.book_label); sh('ms-book-text',m.book_text); st('ms-legal',m.legal);
+}
+(function(){
+  var _origSetLang = setLang;
+  setLang = function(l,btn){ _origSetLang(l,btn); applyMassageLang(l); };
+  var _origShow = showScreen;
+  showScreen = function(id){ _origShow(id); applyMassageLang(window._currentLang || 'en'); };
+})();
 
 // REQUESTS
 function sendRequest(type){
